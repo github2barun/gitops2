@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-scc-payout-engine-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/sccpayoutengine/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-scc-payout-engine-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/sccpayoutengine/upgrades/*").AsConfig | indent 2 }}

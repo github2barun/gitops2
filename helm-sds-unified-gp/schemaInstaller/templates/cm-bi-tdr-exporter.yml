@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-bi-tdr-exporter-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/bitdrexporter/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-bi-tdr-exporter-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/bitdrexporter/upgrades/*").AsConfig | indent 2 }}

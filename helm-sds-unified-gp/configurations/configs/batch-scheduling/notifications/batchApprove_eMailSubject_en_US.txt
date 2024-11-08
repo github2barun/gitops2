@@ -1,0 +1,1 @@
+Batch [[${batchPool.batchPoolId.batchId}]] [[${batchPool.batchDesc}]] requested approval

@@ -1,0 +1,134 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-biaggregator-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-biaggregator-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/bi-aggregator"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-biaggregator-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-biaggregator-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bi-aggregator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: bi-aggregator
+spec:
+  replicas: {{ .Values.replica.vfolink }}
+  selector:
+    matchLabels:
+      app: bi-aggregator
+  template:
+    metadata:
+      labels:
+        app: bi-aggregator
+    spec:
+      nodeName: {{ .Values.nodename }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - bi-aggregator
+              topologyKey: "kubernetes.io/hostname"
+      initContainers:
+        - name: copy-configs
+          image: centos:centos7.9.2009
+          imagePullPolicy: IfNotPresent
+          command: ['bash', '/scripts/configs-copy']
+          volumeMounts:
+            - name: config-dir-main
+              mountPath: {{ .Values.conf }}
+            - name: vol-cm-main
+              mountPath: /main
+            - name: vol-cm-biaggregator-main
+              mountPath: /biaggregator-main
+            - name: vol-cm-biaggregator-scripts
+              mountPath: /biaggregator-scripts
+            - name: vol-cm-biaggregator-scripts2
+              mountPath: /biaggregator-scripts2
+            - name: vol-cm-biaggregator-mapping
+              mountPath: /biaggregator-mapping
+            - name: vol-cm-biaggregator-copy
+              mountPath: /scripts
+      containers:
+        - name: bi-aggregator
+          image: {{ .Values.image.biaggregator }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5554
+          {{- if eq .Values.resourceApply true }}
+          resources:
+            limits:
+              cpu: '1'
+              memory: 3Gi
+            requests:
+              cpu: '0.5'
+              memory: 2Gi
+          {{- end }}
+          volumeMounts:
+            - name: tz-{{ .Values.country }}
+              mountPath: /etc/localtime
+            - name: config-dir-main
+              mountPath: {{ .Values.conf }}
+            - name: vol-logs-biaggregator
+              mountPath: {{ .Values.logs }}/bi-aggregator
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timzone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-biaggregator-main
+        configMap:
+          name: cm-biaggregator-main
+      - name: vol-cm-biaggregator-scripts
+        configMap:
+          name: cm-biaggregator-scripts
+      - name: vol-cm-biaggregator-scripts2
+        configMap:
+          name: cm-biaggregator-scripts2
+      - name: vol-cm-biaggregator-mapping
+        configMap:
+          name: cm-biaggregator-mapping
+      - name: vol-cm-biaggregator-copy
+        configMap:
+          name: cm-biaggregator-copy
+      - name: vol-logs-biaggregator
+        persistentVolumeClaim:
+          claimName: logs-biaggregator-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      imagePullSecrets:
+        - name: {{ .Values.secret }}

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/ldaplink-core/scripts
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /ldaplink-main/* /opt/seamless/conf/ldaplink-core/
+cp -L /ldaplink-scripts/* /opt/seamless/conf/ldaplink-core/scripts/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/ldaplink-core+/var/seamless/log/${NAMESPACE}/ldaplink-core+g" /opt/seamless/conf/ldaplink-core/log4j2.xml
+else
+    echo "Nothing Required"
+fi

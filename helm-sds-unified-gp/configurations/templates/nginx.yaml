@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-nginx-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/nginx/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-nginx-confd
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/nginx/conf.d/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-nginx-services
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/nginx/conf.d/services/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-nginx-support
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/nginx/conf.d/support/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-nginx-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-nginx" | quote }}

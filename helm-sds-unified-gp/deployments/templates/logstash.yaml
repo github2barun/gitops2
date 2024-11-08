@@ -1,0 +1,168 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-logstash-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-logstash-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/logstash"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-logstash-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-logstash-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: logstash
+spec:
+  replicas: {{ .Values.replica.logstash }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+       maxSurge:  40%
+       maxUnavailable: 20%
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - logstash
+            topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: copy-configs
+        image: centos
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: NAMESPACE_LOGS
+          value: "{{ .Values.Namespace_logs_enabled }}"
+        imagePullPolicy: IfNotPresent
+        command: ['bash','/scripts/configs-copy']
+        volumeMounts:
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-cm-main
+          mountPath: /main
+        - name: vol-cm-logstash-main
+          mountPath: /logstash-main
+        - name: vol-cm-logstash-mapping
+          mountPath: /logstash-mapping
+        - name: vol-cm-logstash-ruby
+          mountPath: /logstash-ruby
+        - name: vol-cm-logstash-copy
+          mountPath: /scripts
+      containers:
+      - name: logstash
+        image: {{ .Values.image.logstash }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8374
+        readinessProbe:
+          tcpSocket:
+            port: 8374
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        livenessProbe:
+          tcpSocket:
+            port: 8374
+          initialDelaySeconds: 60
+          periodSeconds: 40
+        env:
+        - name: DEFAULT_TIME_ZONE
+          value: "{{ .Values.timezone }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- if eq .Values.resourceApply true }}
+        resources:
+          limits:
+            cpu: '1'
+            memory: 3Gi
+          requests:
+            cpu: '0.5'
+            memory: 2Gi
+        {{- end }}
+        volumeMounts:
+        - name: tz-{{ .Values.country }}
+          mountPath: /etc/localtime
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-logs-logstash
+          mountPath: {{ .Values.logs }}/logstash-system
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timezone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-logstash-main
+        configMap:
+          name: cm-logstash-main
+      - name: vol-cm-logstash-mapping
+        configMap:
+          name: cm-logstash-mapping
+      - name: vol-cm-logstash-ruby
+        configMap:
+          name: cm-cm-logstash-ruby
+      - name: vol-logs-logstash
+        persistentVolumeClaim:
+          claimName: logs-logstash-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      - name: vol-cm-logstash-copy
+        configMap:
+          name: cm-logstash-copy
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: logstash
+  name: svc-logstash
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 8374
+    targetPort: 8374
+  selector:
+    app: logstash
+  type: ClusterIP

@@ -1,0 +1,1 @@
+Batch JobId: [[${batchPool.batchPoolId.batchId}]] processing: [[${batchPool.batchStatus}]]

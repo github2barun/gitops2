@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	This is the sample configuration file for the account simulator accounts database
+	It basically tells what types of account id:s the simulator will contain, what fields they have and where to store the test account data
+	Typically, this file can man times be used "as is" as long as you accept the default account id rules, 
+	  which simulates all swedish mobile numbers (all account id:s starting with "4670")   
+-->
+<resourcedb:ResourceDatabase
+	xmlns:resourcedb="http://www.seamless.se/ResourceDatabase"
+	xmlns:seamless="http://www.seamless.se/SeamlessCommon" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.seamless.se/ResourceDatabase ../../utils/src/main/resources/xsd/ResourceDatabase.xsd "
+	resetAtStartup="false">
+	<!--
+		This element contains the database connection that the resource
+		database should use to store resources The default element included
+		here uses HSQL to store an in-memory database, ie it will not be
+		persistent between restarts and does not require and database server
+		up and running, which is a very nice default By changing ":mem:" to
+		":file:" below the database will be stored in a file instead which
+		might be useful sometimes if you want simple persistence.
+	-->
+	<resourcedb:DatabaseConnection 
+		dbDriver="org.hsqldb.jdbcDriver"
+		dbURL="jdbc:hsqldb:mem:hsqldb/SimulatedAccounts" 
+		username="sa"
+		password="" />
+
+	<!--
+		This is an example if you would like to connect your resource database
+		to a MySQL database instead. Change the database path and login
+		options and uncomment the section below in that case, but don't forget
+		to comment the above HSQL connection!
+	-->
+	<!--
+
+		<resourcedb:DatabaseConnection 
+			dbDriver="com.mysql.jdbc.Driver"
+			dbURL="jdbc:mysql://localhost:3306/SimulatedAccounts"
+			password="krokuss" 
+			username="root" />
+	-->
+
+	<!--
+		This element contains an optional script that is run when initializing
+		an account that was not existing before typically, this is used to
+		set default fields on the resource
+		
+		WARN: Changing values here may result in automated-test failures!!! 
+	-->
+	<resourcedb:InitScript>
+		<![CDATA[
+  	void initResource()
+  	{
+  		// By default, the balance is 100000
+	  	resource.setField("balance", new java.math.BigDecimal(100000));
+	  	resource.setField("availableAmount", new java.math.BigDecimal(101000));
+	  	resource.setField("creditLimit", new java.math.BigDecimal(1000));
+	  	
+	  		
+  		// By default, BIC is turned OFF
+  		if (resource.getField("BIC") == null)
+	  		resource.setField("BIC", 0);
+  		// By default, FAF list is empty
+  		if (resource.getField("FAF_list") == null)
+	  		resource.setField("FAF_list", "");
+	  	if (resource.getId().startsWith("AIRTIME::46708"))
+	  	{
+	  		resource.setField("language", "fr");
+	  	}
+	  	
+	  	// Default language is set by property locale.default_language
+	  	resource.setField("language", com.seamless.common.locale.Locale.getInstance().getDefaultLanguage());
+
+  		// By default, account class is "130"
+  		// (and account class expiry is not set) 
+  		if (resource.getField("accountClassId") == null)
+	  		resource.setField("accountClassId", "130");
+  		// By default, account type is "PREPAID"
+  		// (and account class expiry is not set) 
+  		if (resource.getField("typeId") == null)
+	  		resource.setField("typeId", "PREPAID");
+	  		
+	  	// By default, account status mapping is Active
+	  	if (resource.getField("status") == null)
+	  		resource.setField("status", "Active");
+	  		
+	  	// Default currency is taken from locale.default_currency
+	  	if (resource.getField("currency") == null) 
+	  	{
+	  		resource.setField("currency", com.seamless.common.locale.Locale.getInstance().getDefaultCurrency());
+	  	}
+	  	
+//	  	resource.setField("supportsCurrencyConversion", "false");
+
+	  	
+	  	// FAF_ADD validation settings
+	  	//	  		
+	  	// Enable/Disable FAF add number already exists with either true or false.
+	  	resource.setField("FAF_add_validate_number_already_exists", "false");	  	
+		// The price applied for FAF add if a value is set that is greater than zero.
+	  	resource.setField("FAF_add_price", new java.math.BigDecimal(0));
+	  	// The link has applied a price or not for FAF add, either true or false.
+	  	resource.setField("FAF_ADD_price_applied_by_link", "false");
+	  	
+	  	// SC_CHANGE validation settings
+	  	//	  	
+	  	// The price applied for SC change if a value is set that is greater than zero.
+	  	resource.setField("SC_change_price", new java.math.BigDecimal(1));
+	  	// The link has applied a price or not for SC change, either true or false.
+	  	resource.setField("SC_change_price_applied_by_link", "false");
+	  	
+	}
+  ]]>
+	</resourcedb:InitScript>
+
+
+	<!--
+		This element describes the rules used for account id:s.
+		Basically, if a request comes in for an account id that complies with the rules, the account will automatically be created on-the-fly (and persisted)
+		This is VERY useful behaviour when testing, since there is no need to create large sets of test numbers in advance!
+		
+	-->
+	<resourcedb:IdRules>
+		<resourcedb:RegexpValidation>.*</resourcedb:RegexpValidation>
+	</resourcedb:IdRules>
+
+
+
+	<!--
+		It is possible to import specific lists of accounts into the test database when starting up.
+		In that case, un-comment the element below and fill a filename and the extraction rules.
+		These accounts will be imported and allowed in addition to the account id rules specified above.
+	-->
+	<!--
+		<resourcedb:LoadResourceFile filename="subscribers.txt">
+		<resourcedb:IdRegexp>([0-9]*),</resourcedb:IdRegexp>
+		<resourcedb:ExcludeRegexp>.*REMOVED.*</resourcedb:ExcludeRegexp>
+		<resourcedb:BlockRegexp>.*BLOCKED.*</resourcedb:BlockRegexp>
+		<resourcedb:FieldImport fieldName="balance" type="LONG">
+			<resourcedb:Regexp>([0-9]*)$</resourcedb:Regexp>
+		</resourcedb:FieldImport> </resourcedb:LoadResourceFile>
+	-->
+
+</resourcedb:ResourceDatabase>

@@ -1,0 +1,1 @@
+ALTER TABLE groupmanagementsystem.workflow_tracker ADD `reason` longtext DEFAULT NULL AFTER approved;

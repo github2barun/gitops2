@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/ims-bridge
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /ims-bridge/* /opt/seamless/conf/ims-bridge/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+  echo "namespace-based logs will be enabled"
+  sed -i "s+/var/seamless/log/ims-bridge+/var/seamless/log/${NAMESPACE}/ims-bridge+g" /opt/seamless/conf/ims-bridge/log4j.properties
+else
+  echo "Nothing Required"
+fi

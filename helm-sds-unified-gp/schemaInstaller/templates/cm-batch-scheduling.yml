@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-batch-scheduling-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/batchschedulingsystem/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-batch-scheduling-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/batchschedulingsystem/upgrades/*").AsConfig | indent 2 }}

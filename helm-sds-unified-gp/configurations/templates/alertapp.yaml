@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-alertapp-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/alertapp/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-alertapp-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-alertapp" | quote }}

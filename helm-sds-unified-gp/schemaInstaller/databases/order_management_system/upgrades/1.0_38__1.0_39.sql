@@ -1,0 +1,2 @@
+ALTER TABLE `order_type_category` DROP CONSTRAINT `chk_order_category`;
+ALTER TABLE `order_type_category` ADD CONSTRAINT `chk_order_category` CHECK (order_category IN ('RETURN', 'REVERSAL', 'ORDER', 'STOCK_TRANSFER','MANUAL_ADJUSTMENT'));

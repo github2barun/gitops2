@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" name="Log4j2PropertiesConfig">
+    <Properties>
+        <Property name="APP_LOG_ROOT">/var/seamless/log/bi-aggregator/</Property>
+        <Property name="APP_LOG_FILE_NAME">bi-aggregator.log</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d [%t] %-5p %c - %m%n"/>
+        </Console>
+        <RollingFile name="LogToFile" fileName="${APP_LOG_ROOT}/${APP_LOG_FILE_NAME}"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/${APP_LOG_FILE_NAME}.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d [%t] %-5p %c - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** TransactionStatisticsAggregator ********** -->
+        <RollingFile name="LogToTransactionStatisticsAggregatorFile"
+                     fileName="${APP_LOG_ROOT}/TransactionStatisticsAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/TransactionStatisticsAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** AllOrdersAggregator ********** -->
+        <RollingFile name="LogToAllOrdersAggregatorFile" fileName="${APP_LOG_ROOT}/AllOrdersAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/AllOrdersAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** DealerStockMovementAggregator ********** -->
+        <RollingFile name="LogToDealerStockMovementAggregatorFile" fileName="${APP_LOG_ROOT}/DealerStockMovementAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/DealerStockMovementAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** OrderQuantityAggregator ********** -->
+        <RollingFile name="LogToOrderQuantityAggregatorFile" fileName="${APP_LOG_ROOT}/OrderQuantityAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/OrderQuantityAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** ImsDataAggregator ********** -->
+        <RollingFile name="LogToImsDataAggregatorFile" fileName="${APP_LOG_ROOT}/ImsDataAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/ImsDataAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** AllTripDetailsAggregator ********** -->
+        <RollingFile name="LogToAllTripDetailsAggregatorFile" fileName="${APP_LOG_ROOT}/AllTripDetailsAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/AllTripDetailsAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** ResellerCurrentStatus ********** -->
+        <RollingFile name="LogToResellerCurrentStatusFile" fileName="${APP_LOG_ROOT}/ResellerCurrentStatus.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/ResellerCurrentStatus.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** StockOwnerShipReport ********** -->
+        <RollingFile name="LogToStockOwnerShipReportFile" fileName="${APP_LOG_ROOT}/StockOwnerShipReport.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/StockOwnerShipReport.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** ResellerStockInoutStats ********** -->
+        <RollingFile name="LogToResellerStockInoutStatsFile" fileName="${APP_LOG_ROOT}/ResellerStockInoutStats.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/ResellerStockInoutStats.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** MonthlySurveyScoreAggregator ********** -->
+        <RollingFile name="LogToMonthlySurveyScoreAggregatorFile" fileName="${APP_LOG_ROOT}/MonthlySurveyScoreAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/MonthlySurveyScoreAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** FeedbackSurveyAllScores ********** -->
+        <RollingFile name="LogToFeedbackSurveyAllScoresFile" fileName="${APP_LOG_ROOT}/FeedbackSurveyAllScores.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/FeedbackSurveyAllScores.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** AllTransactionDetailsReport ********** -->
+        <RollingFile name="LogToAllTransactionDetailsReportFile" fileName="${APP_LOG_ROOT}/AllTransactionDetailsReport.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/AllTransactionDetailsReport.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** ExternalPosStockHolding ********** -->
+        <RollingFile name="LogToExternalPosStockHoldingFile" fileName="${APP_LOG_ROOT}/ExternalPosStockHolding.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/ExternalPosStockHolding.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** DealerAccountStatement ********** -->
+        <RollingFile name="LogToDealerAccountStatementFile" fileName="${APP_LOG_ROOT}/DealerAccountStatement.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/DealerAccountStatement.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** OperatorToDealerAudits ********** -->
+        <RollingFile name="LogToOperatorToDealerAuditsFile" fileName="${APP_LOG_ROOT}/OperatorToDealerAudits.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/OperatorToDealerAudits.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** StdDailyTransactionSummaryAggregator ********** -->
+        <RollingFile name="StdDailyTransactionSummaryAggregator" fileName="${APP_LOG_ROOT}/StdDailyTransactionSummaryAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/StdDailyTransactionSummaryAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** ResellerInfoAggregator ********** -->
+        <RollingFile name="LogToResellerInfoAggregatorFile" fileName="${APP_LOG_ROOT}/ResellerInfoAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/ResellerInfoAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!-- # ********** SCCHealthControlAggregator ********** -->
+        <RollingFile name="LogToSCCHealthControlAggregatorFile" fileName="${APP_LOG_ROOT}/SCCHealthControlAggregator.log"
+                     append="true"
+                     filePattern="${APP_LOG_ROOT}/SCCHealthControlAggregator.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d %-5p - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.TransactionStatisticsAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToTransactionStatisticsAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.AllOrdersAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToAllOrdersAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.DealerStockMovementAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToDealerStockMovementAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.OrderQuantityAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToOrderQuantityAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.ImsDataAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToImsDataAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.AllTripDetailsAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToAllTripDetailsAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.ResellerCurrentStatus" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToResellerCurrentStatusFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.StockOwnerShipReport" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToStockOwnerShipReportFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.ResellerStockInoutStats" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToResellerStockInoutStatsFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.MonthlySurveyScoreAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToMonthlySurveyScoreAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.FeedbackSurveyAllScores" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToFeedbackSurveyAllScoresFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.AllTransactionDetailsReport" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToAllTransactionDetailsReportFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.ExternalPosStockHolding" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToExternalPosStockHoldingFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.DealerAccountStatement" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToDealerAccountStatementFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.OperatorToDealerAudits" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToOperatorToDealerAuditsFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.StdDailyTransactionSummaryAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="StdDailyTransactionSummaryAggregator"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.ResellerInfoAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToResellerInfoAggregatorFile"/>
+        </Logger>
+        <Logger name="com.seamless.customer.bi.aggregator.aggregate.SCCHealthControlAggregator" level="INFO"
+                additivity="false">
+            <AppenderRef ref="LogToSCCHealthControlAggregatorFile"/>
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+
+    </Loggers>
+</Configuration>

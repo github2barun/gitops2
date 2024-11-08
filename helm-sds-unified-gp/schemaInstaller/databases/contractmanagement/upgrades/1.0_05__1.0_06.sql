@@ -1,0 +1,2 @@
+ALTER TABLE `commission_contracts` MODIFY `contract_status` int(1) DEFAULT 0 COMMENT 'what are the possible values for the status column';
+CREATE INDEX `margin_rule_key` ON `dwa_contract_margin_rules` (`entry_key`, `entry_range_key`);

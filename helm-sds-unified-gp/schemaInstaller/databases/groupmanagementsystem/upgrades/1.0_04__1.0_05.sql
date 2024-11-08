@@ -1,0 +1,2 @@
+ALTER TABLE workflow_tracker ADD created_by VARCHAR(255) NOT NULL AFTER notify_first_approval;
+ALTER TABLE workflow_tracker ADD extra_params JSON CHECK (JSON_VALID(extra_params)) AFTER last_modified_date;

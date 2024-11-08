@@ -1,0 +1,16 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/notification-manager/datafeeder/templates
+mkdir /opt/seamless/conf/notification-manager/keys
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /notification-manager-main/* /opt/seamless/conf/notification-manager/
+cp -L /notification-manager-feeder/* /opt/seamless/conf/notification-manager/datafeeder/templates/
+cp -L /notification-manager-keys/* /opt/seamless/conf/notification-manager/keys/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/notification-manager+/var/seamless/log/${NAMESPACE}/notification-manager+g" /opt/seamless/conf/notification-manager/log4j2-spring.xml
+else
+    echo "Nothing Required"
+fi

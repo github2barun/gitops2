@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-otp-management-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/otp-management-system/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-otp-management-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-otp-management" | quote }}

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/access-management-system/templates
+mkdir -p /opt/seamless/conf/access-management-system/auditFeed/templates
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /access-management-main/* /opt/seamless/conf/access-management-system/
+cp -L /access-management-templates/* /opt/seamless/conf/access-management-system/templates/
+cp -L /access-management-audit-templates/* /opt/seamless/conf/access-management-system/auditFeed/templates/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/access-management-system+/var/seamless/log/${NAMESPACE}/access-management-system+g" /opt/seamless/conf/access-management-system/log4j2.xml
+else
+    echo "Nothing Required"
+fi

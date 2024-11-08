@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-scc-data-aggregator-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/sccdataaggregator/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-scc-data-aggregator-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/sccdataaggregator/upgrades/*").AsConfig | indent 2 }}

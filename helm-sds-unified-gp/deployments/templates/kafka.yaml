@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: kafka
+spec:
+  replicas: {{ .Values.replica.kafka }}
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - kafka
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: kafka
+        image: {{ .Values.image.kafka }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9092
+        - containerPort: 3030
+        - containerPort: 2181
+        - containerPort: 8081
+        - containerPort: 8082
+        - containerPort: 8083
+        env:
+        - name: ADV_HOST
+          value: "svc-kafka"
+        - name: DEFAULT_TIME_ZONE
+          value: "{{ .Values.timezone }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-kafka
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: kafka
+spec:
+  ports:
+  - name: kafka-0
+    port: 2181
+    targetPort: 2181
+  - name: kafka-1
+    port: 3030
+    targetPort: 3030
+  - name: kafka
+    port: 9092
+    targetPort: 9092
+  - name: kafka-2
+    port: 8082
+    targetPort: 8082
+  - name: kafka-3
+    port: 8081
+    targetPort: 8081
+  - name: kafka-4
+    port: 8083
+    targetPort: 8083
+  selector:
+    app: kafka
+  type: ClusterIP

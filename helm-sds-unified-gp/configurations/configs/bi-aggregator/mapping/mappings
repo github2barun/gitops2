@@ -1,0 +1,13 @@
+/*
+This command is for IMS data. Its purpose is to add mapping for nested fields
+Template Name: IMS_data_feed
+*/
+
+curl -XPUT http://<host>:<port>/_template/IMS_data_feed?pretty -H 'Content-Type: application/json' -d '{"template":"data_lake_*","version":1,"settings":{"index.refresh_interval":"5s"},"mappings":{"properties":{"ims.items":{"type":"nested","properties":{"quantity":{"type":"float"}}}}}}'
+
+
+/*
+Mapping template for OMS Data Feed. Added during Unitel Mongolia reports development.
+Template Name: oms_data_feed
+*/
+curl -XPUT http://<host>:<port>/_template/oms_data_feed?pretty -H 'Content-Type: application/json' -d '{"template":"data_lake_*","version":1,"settings":{"index.refresh_interval":"5s"},"mappings":{"properties":{"oms.items":{"type": "nested"}}}}'

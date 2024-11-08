@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-db-ini
+  namespace: {{ .Release.Namespace }}
+data:
+  schemas.ini: |
+{{ .Files.Get "utility/schemas.ini" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-db-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  db-copy: {{ .Files.Get "script/db-copy" | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-db-install
+  namespace: {{ .Release.Namespace }}
+data:
+{{ tpl (.Files.Glob "utility/schemainstall.py").AsConfig . | indent 2 }}

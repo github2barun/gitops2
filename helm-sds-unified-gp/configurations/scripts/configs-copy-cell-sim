@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/cell-sim
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /cell-sim/* /opt/seamless/conf/cell-sim/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/cell-sim+/var/seamless/log/${NAMESPACE}/cell-sim+g" /opt/seamless/conf/cell-sim/log4j.properties
+else
+    echo "Nothing Required"
+fi

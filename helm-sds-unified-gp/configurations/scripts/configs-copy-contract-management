@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/contract-management
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /contract-management/* /opt/seamless/conf/contract-management/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+  echo "namespace-based logs will be enabled"
+  sed -i "s+/var/seamless/log/contract-management+/var/seamless/log/${NAMESPACE}/contract-management+g" /opt/seamless/conf/contract-management/log4j2.xml
+else
+  echo "Nothing Required"
+fi

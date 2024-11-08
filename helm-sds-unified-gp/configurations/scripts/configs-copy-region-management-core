@@ -1,0 +1,15 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/region-management-core
+mkdir /opt/seamless/conf/region-management-core/templates
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /region-management-main/* /opt/seamless/conf/region-management-core/
+cp -L /region-management-templates/* /opt/seamless/conf/region-management-core/templates/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/region-management-core+/var/seamless/log/${NAMESPACE}/region-management-core+g" /opt/seamless/conf/region-management-core/log4j2.properties
+else
+    echo "Nothing Required"
+fi

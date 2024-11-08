@@ -1,0 +1,2 @@
+ALTER TABLE `object_details` ADD COLUMN `original_file_name` varchar(255) DEFAULT NULL AFTER `data`;
+ALTER TABLE `object_details` ADD UNIQUE `rtype_rown_filename_idx` (`resource_type`, `resource_owner`, `uploaded_by`, `uploaded_for`, `original_file_name`);

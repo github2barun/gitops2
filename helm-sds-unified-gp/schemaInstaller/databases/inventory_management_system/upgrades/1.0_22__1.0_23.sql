@@ -1,0 +1,1 @@
+ALTER TABLE owner MODIFY name VARCHAR(255);

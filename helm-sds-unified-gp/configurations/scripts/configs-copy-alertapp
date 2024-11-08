@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/alertapp
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /alertapp/* /opt/seamless/conf/alertapp/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/alertapp+/var/seamless/log/${NAMESPACE}/alertapp+g" /opt/seamless/conf/alertapp/log4j2.xml
+else
+    echo "Nothing Required"
+fi

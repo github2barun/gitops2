@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-biengine-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/bi-engine/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-biengine-templates
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/bi-engine/templates/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-biengine-scripts
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/bi-engine/scripts/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-biengine-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-biengine" | quote }}

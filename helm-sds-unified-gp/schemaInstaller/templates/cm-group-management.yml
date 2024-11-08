@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-group-management-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/groupmanagementsystem/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-group-management-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/groupmanagementsystem/upgrades/*").AsConfig | indent 2 }}

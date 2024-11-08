@@ -1,0 +1,84 @@
+# Properties for access-management-system
+
+
+############### Properties for module access-management #################
+server.contextPath=/access
+server.port=8374
+logging.config=file:/opt/seamless/conf/access-management-system/log4j2.xml
+
+############### Database configuration ##############################
+
+## Change this as per access manager way
+database.name=access_management
+database.db_driver=org.mariadb.jdbc.Driver
+database.db_url=jdbc:mariadb://localhost:3306/access_management
+database.db_user=refill
+database.db_password=refill
+database.maximum_pool_size=20
+database.minimum_idle=2
+database.pool_name=access_management
+database.pool_prepared_statements=true
+database.persistance_batch_size = 500
+
+##################### Message Resource Properties ########################
+locale.message.path=/opt/seamless/conf/access-management-system
+locale.message.prefix=messages
+locale.message.defaultLocale=en-GB
+locale.message.supportedLocale=en-GB,en-US
+
+#-------------------------------------------------------------------------------------
+# Configure freemarker
+#-------------------------------------------------------------------------------------
+dataFeed.freemarker.file.path=/opt/seamless/conf/access-management-system/templates
+#-------------------------------------------------------------------------------------
+# Configuration for executor service
+#-------------------------------------------------------------------------------------
+threadpoolmanager.pools.dataFeed.targetId=com.seamless.common.data.dump.dataFeed
+threadpoolmanager.pools.dataFeed.corePoolSize=25
+threadpoolmanager.pools.dataFeed.maxPoolSize=40
+threadpoolmanager.pools.dataFeed.keepAliveTime=60000
+threadpoolmanager.pools.dataFeed.keepAliveTimeUnit=MILLISECONDS
+#-------------------------------------------------------------------------------------
+# Data feed version
+#-------------------------------------------------------------------------------------
+dataFeed.version=1
+dataFeed.componentName=ACCESS-MANAGEMENT-SYSTEM
+
+#-------------------------------------------------------------------------------------
+# Audit feed config
+#-------------------------------------------------------------------------------------
+auditFeed.version=1
+auditFeed.componentName=access
+auditFeed.eventType=AUDIT
+# list of events can be either `INCLUDE` or `EXCLUDE`
+audit.feed.list.type=EXCLUDE
+# comma separated list
+audit.feed.list.events=
+
+# Enable or disable from and to diff for audit objects
+auditFeed.events.with.changes.enabled=false
+# list of events can be either `INCLUDE` or `EXCLUDE`
+auditFeed.events.with.changes.type=EXCLUDE
+# comma separated list of events to enable audit comparison
+auditFeed.events.with.changes.list=
+
+#---- Scc connection props ----#
+scc.live.data.ingestor.baseUri=http://localhost:9598
+scc.live.data.ingestor.restApiUri=/scc-live-data-ingestor/data/v1/ingestData
+scc.live.data.ingestor.eventSourceType=auditFieldCompari
+
+access.http.response.headers=authorization,system-token
+
+############# CORS config ####################
+cors.enable=false
+#comma separated origin list
+cors.allowedorigins=*
+
+### Policy Availability Config ###
+
+policy.config.default.available.until.days = 365
+
+### Make this false to restrict delete of policy with policy mappings/associations ###
+policy.config.delete.associated.policy.mappings=true
+
+access.v3.mandatory.resource_mappings=[{"masterResourceId":1,"resourceName":"DEFAULT","subResources":[{"resourceId":149,"resourceName":"Login"},{"resourceId":151,"resourceName":"Change Password"}]}]

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-bi-tdr-exporter-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/bi-tdr-exporter/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-bi-tdr-exporter-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-bi-tdr-exporter" | quote }}

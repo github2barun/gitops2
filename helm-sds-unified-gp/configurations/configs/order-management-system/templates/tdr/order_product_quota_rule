@@ -1,0 +1,12 @@
+"oms.resultCode":${(response.resultCode)!'N/A'},
+"oms.resultMessage":"${(response.resultMessage)!'N/A'}",
+"oms.orderProductQuotaRule":{
+"resellerId":"${(response.resellerId)!'N/A'}",
+"productSKU":"${(response.productSKU)!'N/A'}",
+"quotaFor":"${(response.quotaFor)!'N/A'}",
+"multipleOf":"${(response.multipleOf)!'N/A'}",
+"hourlyLimit":"${(response.hourlyLimit)!'N/A'}",
+"dailyLimit":"${(response.dailyLimit)!'N/A'}",
+"weeklyLimit":"${(response.weeklyLimit)!'N/A'}",
+"monthlyLimit":"${(response.monthlyLimit)!'N/A'}"
+}

@@ -1,0 +1,157 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-coreproxy-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-coreproxy-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/coreproxy"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-coreproxy-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-coreproxy-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coreproxy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: coreproxy
+spec:
+  replicas: {{ .Values.replica.coreproxy }}
+  selector:
+    matchLabels:
+      app: coreproxy
+  template:
+    metadata:
+      labels:
+        app: coreproxy
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - coreproxy
+            topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: copy-configs
+        image: centos
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: NAMESPACE_LOGS
+          value: "{{ .Release.Namespace_logs_enabled }}"
+        imagePullPolicy: IfNotPresent
+        command: ['bash','/scripts/configs-copy']
+        volumeMounts:
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-cm-main
+          mountPath: /main
+        - name: vol-cm-coreproxy-main
+          mountPath: /coreproxy
+        - name: vol-cm-coreproxy-copy
+          mountPath: /scripts
+      containers:
+      - name: coreproxy
+        image: {{ .Values.image.coreproxy }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8912
+        - containerPort: 8983
+        {{- if eq .Values.telemetry_client true }}
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: "-javaagent:/apmjar/{{ .Values.telemetry_jar }} -Dotel.service.name=coreproxy -Dotel.traces.exporter=zipkin -Dotel.exporter.zipkin.endpoint=http://{{ .Values.telemetry_server }}:9411/api/v2/spans -Dotel.logs.exporter=otlp -Dotel.metrics.exporter=otlp -Dotel.exporter.otlp.endpoint=http://{{ .Values.telemetry_server }}:4318 -Dotel.javaagent.debug=true -Xmx256m"
+        {{- end }}
+        {{- if eq .Values.resourceApply true }}
+        resources:
+          limits:
+            cpu: '1'
+            memory: 3Gi
+          requests:
+            cpu: '0.5'
+            memory: 2Gi
+        {{- end }}
+        volumeMounts:
+        - name: tz-{{ .Values.country }}
+          mountPath: /etc/localtime
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-logs-coreproxy
+          mountPath: {{ .Values.logs }}/coreproxy
+        {{- if eq .Values.jar_volume true }}
+        - name: vol-logs-apmjar
+          mountPath: /apmjar
+        {{- end }}
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timezone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-coreproxy-main
+        configMap:
+          name: cm-coreproxy-main
+      - name: vol-logs-coreproxy
+        persistentVolumeClaim:
+          claimName: logs-coreproxy-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      - name: vol-cm-coreproxy-copy
+        configMap:
+          name: cm-coreproxy-copy
+      {{- if eq .Values.jar_volume true }}
+      - name: vol-logs-apmjar
+        persistentVolumeClaim:
+          claimName: logs-apmjar-{{ .Release.Namespace }}
+      {{- end }}
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: coreproxy
+  name: svc-coreproxy
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: cp1
+    port: 8912
+    targetPort: 8912
+  - name: cp2
+    port: 8983
+    targetPort: 8983
+  selector:
+    app: coreproxy
+  type: ClusterIP

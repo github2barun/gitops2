@@ -1,0 +1,36 @@
+{{- if eq .Values.jar_volume true }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-apmjar-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-apmjar-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/apmjar"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-apmjar-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-apmjar-{{ .Release.Namespace }}
+  storageClassName: manual
+{{- end }}

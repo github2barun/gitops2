@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/order-management-system/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-audit
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/order-management-system/templates/audit/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-notification
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/order-management-system/templates/notification/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-tdr
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/order-management-system/templates/tdr/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-order-management-system" | quote }}

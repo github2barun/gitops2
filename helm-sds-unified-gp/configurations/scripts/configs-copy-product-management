@@ -1,0 +1,15 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/product-management/templates/{audit,tdr}
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /product-management-main/* /opt/seamless/conf/product-management/
+cp -L /product-management-audit/* /opt/seamless/conf/product-management/templates/audit/
+cp -L /product-management-tdr/* /opt/seamless/conf/product-management/templates/tdr/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/product-management+/var/seamless/log/${NAMESPACE}/product-management+g" /opt/seamless/conf/product-management/log4j2.properties
+else
+    echo "Nothing Required"
+fi

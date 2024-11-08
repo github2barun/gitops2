@@ -1,0 +1,1 @@
+ALTER TABLE `rule_fields_association` MODIFY `field_value` longtext not null;

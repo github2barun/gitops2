@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{ISO8601} [%-5level][%t] - %c - %msg%n%throwable"/>
+        </Console>
+
+        <Console name="RequestConsole" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%msg%n%throwable"/>
+        </Console>
+
+        <Console name="ResponseConsole" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%msg%n%throwable"/>
+        </Console>
+
+        <RollingFile name="RollingFile"
+                     fileName="/var/seamless/log/notification-ui/notificationui.log" append="true"
+                     filePattern="/var/seamless/log/notification-ui/notificationui.%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{ISO8601} [%-5level][%t] - [%c{1}] [%X{ersReference}] - %msg%n%throwable</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="AuditFeedFile"
+                     fileName="/var/seamless/log/notification-ui/dump/notification-ui-audit.dump" append="true"
+                     filePattern="/var/seamless/log/notification-ui/dump/notificationui.%d{yyyy-MM-dd}-audit.log">
+            <PatternLayout>
+                <Pattern>%m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.seamless" level="debug">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+
+        <Logger name="se.seamless" level="debug">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+
+        <Logger name="com.seamless.ers.txe.transaction.model.ERSTransferTransaction" level="OFF">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+
+        <Logger name="org.apache.cxf.interceptor.LoggingOutInterceptor" level="INFO">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.apache.cxf.interceptor.LoggingInInterceptor" level="INFO">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+
+        <Logger name="com.seamless.common.data.dump.AuditFeeder" level="INFO">
+            <AppenderRef ref="AuditFeedFile"/>
+        </Logger>
+
+    </Loggers>
+
+</Configuration>

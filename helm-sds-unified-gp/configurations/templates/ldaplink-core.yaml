@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-ldaplink-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/ldaplink-core/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-ldaplink-scripts
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/ldaplink-core/scripts/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-ldaplink-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-ldaplink-core" | quote }}

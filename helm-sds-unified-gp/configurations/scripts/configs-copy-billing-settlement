@@ -1,0 +1,14 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/billing-settlement/datafeeder/templates
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /billing-settlement-main/* /opt/seamless/conf/billing-settlement/
+cp -L /billing-settlement-feeder/* /opt/seamless/conf/billing-settlement/datafeeder/templates/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/billing-settlement+/var/seamless/log/${NAMESPACE}/billing-settlement+g" /opt/seamless/conf/billing-settlement/log4j2.xml
+else
+    echo "Nothing Required"
+fi

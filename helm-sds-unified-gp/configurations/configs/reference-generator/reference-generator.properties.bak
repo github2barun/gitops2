@@ -1,0 +1,19 @@
+# Properties for module ers-reference-generator
+server.port=9997
+
+#-------------------------------------
+# ERS Reference Generator Configuration
+#-------------------------------------
+reference_generator.class_name=com.seamless.common.referencegeneration.TimestampReferenceGenerator
+reference_generator.timestamp_repeat_warning_count=10
+reference_generator.reference_counter_length=5
+reference_generator.node_id=01
+
+#-------------------------------------
+# Flow control configuration
+#-------------------------------------
+flowcontrol.default.asynchronous=false
+flowcontrol.default.cooldown_time=100
+flowcontrol.default.max_parallel_requests=40
+
+logging.config=file:/opt/seamless/conf/reference-generator/log4j2.properties

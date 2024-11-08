@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv-{{ .Release.Namespace }}
+  labels:
+    app: redis
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/seamless/contrib/redis"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replica.redis }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+       maxSurge: 50%
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroupChangePolicy: "OnRootMismatch"
+        seLinuxOptions:
+          type: "spc_t"
+      containers:
+        - name: redis
+          image: {{ .Values.image.redis }}
+          resources:
+            limits:
+              cpu: '5'
+              memory: 80Gi
+            requests:
+              cpu: '4'
+              memory: 25Gi
+          command: ['redis-server','/etc/custom-redis/redis.conf']
+          ports:
+          - containerPort: 6379
+          volumeMounts:
+            - name: vol-cm-redis-main
+              mountPath: /etc/custom-redis
+            - name: vol-logs-redis
+              mountPath: /var/seamless/log/redis/
+            - name: vol-redis-contrib
+              mountPath: /opt/seamless/contrib/redis
+      volumes:
+        - name: vol-cm-redis-main
+          configMap:
+            name: cm-redis-main
+        - name: vol-logs-redis
+          emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: vol-redis-contrib
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+      selector:
+        matchLabels:
+          app: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-redis
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      protocol: TCP
+      targetPort: 6379
+  type: ClusterIP

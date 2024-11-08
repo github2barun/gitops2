@@ -1,0 +1,1 @@
+The batch [[${batchPool.batchPoolId.batchId}]] [[${batchPool.batchDesc}]] is processed.

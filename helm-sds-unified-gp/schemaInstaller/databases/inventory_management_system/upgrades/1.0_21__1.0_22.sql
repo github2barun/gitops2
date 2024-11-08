@@ -1,0 +1,1 @@
+ALTER TABLE serialized_inventory DROP COLUMN table_tag;

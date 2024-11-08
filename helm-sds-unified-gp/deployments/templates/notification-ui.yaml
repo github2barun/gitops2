@@ -1,0 +1,162 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-notification-ui-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name:  logs-notification-ui-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/notification-ui"
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-notification-ui-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-notification-ui-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: notification-ui
+    version: v1
+spec:
+  replicas: {{ .Values.replica.notificationui }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+       maxSurge:  40%
+       maxUnavailable: 20%
+  selector:
+    matchLabels:
+      app: notification-ui
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: notification-ui
+        version: v1
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - notification-ui
+            topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: copy-configs
+        image: centos
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: NAMESPACE_LOGS
+          value: "{{ .Release.Namespace_logs_enabled }}"
+        imagePullPolicy: IfNotPresent
+        command: ['bash','/scripts/configs-copy']
+        volumeMounts:
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-cm-main
+          mountPath: /main
+        - name: vol-cm-notification-ui-main
+          mountPath: /notification-ui
+        - name: vol-cm-notification-ui-copy
+          mountPath: /scripts
+      containers:
+      - name: notification-ui
+        image: {{ .Values.image.notificationui }}
+        env:
+        - name: DEFAULT_TIME_ZONE
+          value: "{{ .Values.timezone }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8177
+        readinessProbe:
+          tcpSocket:
+            port: 8177
+          initialDelaySeconds: 40
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 8177
+          initialDelaySeconds: 40
+          periodSeconds: 20
+          {{- if eq .Values.resourceApply true }}
+          resources:
+            limits:
+              cpu: '1'
+              memory: 3Gi
+            requests:
+              cpu: '0.5'
+              memory: 2Gi
+          {{- end }}
+        volumeMounts:
+        - name: tz-{{ .Values.country }}
+          mountPath: /etc/localtime
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-logs-notification-ui
+          mountPath: {{ .Values.logs }}/notification-ui
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timezone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-notification-ui-main
+        configMap:
+          name: cm-notification-ui-main
+      - name: vol-logs-notification-ui
+        persistentVolumeClaim:
+          claimName: logs-notification-ui-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      - name: vol-cm-notification-ui-copy
+        configMap:
+          name: cm-notification-ui-copy
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: notification-ui
+  name: svc-notification-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 8177
+    targetPort: 8177
+  selector:
+    app: notification-ui
+  type: ClusterIP

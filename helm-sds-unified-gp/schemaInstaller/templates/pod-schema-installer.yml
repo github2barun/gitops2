@@ -1,0 +1,331 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-utility
+  namespace: {{ .Release.Namespace }}
+spec:
+  initContainers:
+  - name: copy-dbs
+    image: rockylinux:8-minimal
+    imagePullPolicy: IfNotPresent
+    command: ['bash','/scripts/db-copy']
+    volumeMounts:
+    - name: db-utility-empty
+      mountPath: /schema-install
+    - name: vol-cm-db-ini
+      mountPath: /data/db-ini
+    - name: vol-cm-db-install
+      mountPath: /data/db-script
+    - name: vol-cm-access-management-system-db
+      mountPath: /data/access_management
+    - name: vol-cm-access-management-system-db-upgrades
+      mountPath: /data/access_management-upgrade
+    - name: vol-cm-account-management-service-db
+      mountPath: /data/accountmanagement
+    - name: vol-cm-account-management-service-db-upgrades
+      mountPath: /data/accountmanagement-upgrade
+    - name: vol-cm-agent-assignment-system-db
+      mountPath: /data/agentassignmentsystem
+    - name: vol-cm-agent-assignment-system-db-upgrades
+      mountPath: /data/agentassignmentsystem-upgrade
+    - name: vol-cm-alertapp-db
+      mountPath: /data/alertapp
+    - name: vol-cm-alertapp-db-upgrades
+      mountPath: /data/alertapp-upgrade
+    - name: vol-cm-batch-scheduling-db
+      mountPath: /data/batchschedulingsystem
+    - name: vol-cm-batch-scheduling-db-upgrades
+      mountPath: /data/batchschedulingsystem-upgrade
+    - name: vol-cm-bi-aggregator-db
+      mountPath: /data/biaggregator
+    - name: vol-cm-bi-aggregator-db-upgrades
+      mountPath: /data/biaggregator-upgrade
+    - name: vol-cm-bi-tdr-exporter-db
+      mountPath: /data/bitdrexporter
+    - name: vol-cm-bi-tdr-exporter-db-upgrades
+      mountPath: /data/bitdrexporter-upgrade
+    - name: vol-cm-billing-settlement-db
+      mountPath: /data/billingsettlementsystem
+    - name: vol-cm-billing-settlement-db-upgrades
+      mountPath: /data/billingsettlementsystem-upgrade
+    - name: vol-cm-config-services-db
+      mountPath: /data/config_services
+    - name: vol-cm-config-services-db-upgrades
+      mountPath: /data/config_services-upgrade
+    - name: vol-cm-contract-management-system-db
+      mountPath: /data/contractmanagement
+    - name: vol-cm-contract-management-system-db-upgrades
+      mountPath: /data/contractmanagement-upgrade
+    - name: vol-cm-group-management-db
+      mountPath: /data/groupmanagementsystem
+    - name: vol-cm-group-management-db-upgrades
+      mountPath: /data/groupmanagementsystem-upgrade
+    - name: vol-cm-imsbridge-db
+      mountPath: /data/imsbridge
+    - name: vol-cm-imsbridge-db-upgrades
+      mountPath: /data/imsbridge-upgrade
+    - name: vol-cm-integration-services-db
+      mountPath: /data/integration_services
+    - name: vol-cm-integration-services-db-upgrades
+      mountPath: /data/integration_services-upgrade
+    - name: vol-cm-inventory-management-system-db
+      mountPath: /data/inventory_management_system
+    - name: vol-cm-inventory-management-system-db-upgrades
+      mountPath: /data/inventory_management_system-upgrade
+    - name: vol-cm-kyc-db
+      mountPath: /data/kyc
+    - name: vol-cm-kyc-db-upgrades
+      mountPath: /data/kyc-upgrade
+    - name: vol-cm-notification-ui-db
+      mountPath: /data/notificationui
+    - name: vol-cm-notification-ui-db-upgrades
+      mountPath: /data/notificationui-upgrade
+    - name: vol-cm-object-store-manager-db
+      mountPath: /data/object_store_manager
+    - name: vol-cm-object-store-manager-db-upgrades
+      mountPath: /data/object_store_manager-upgrade
+    - name: vol-cm-order-management-system-db
+      mountPath: /data/order_management_system
+    - name: vol-cm-order-management-system-db-upgrades
+      mountPath: /data/order_management_system-upgrade
+    - name: vol-cm-product-management-db
+      mountPath: /data/pms
+    - name: vol-cm-product-management-db-upgrades
+      mountPath: /data/pms-upgrade
+    - name: vol-cm-region-management-core-db
+      mountPath: /data/regionmanagement
+    - name: vol-cm-region-management-core-db-upgrades
+      mountPath: /data/regionmanagement-upgrade
+    - name: vol-cm-scc-commission-engine-db
+      mountPath: /data/scccommission
+    - name: vol-cm-scc-commission-engine-db-upgrades
+      mountPath: /data/scccommission-upgrade
+    - name: vol-cm-scc-data-aggregator-db
+      mountPath: /data/sccdataaggregator
+    - name: vol-cm-scc-data-aggregator-db-upgrades
+      mountPath: /data/sccdataaggregator-upgrade
+    - name: vol-cm-scc-engine-core-db
+      mountPath: /data/sccengine
+    - name: vol-cm-scc-engine-core-db-upgrades
+      mountPath: /data/sccengine-upgrade
+    - name: vol-cm-scc-live-data-ingestor-db
+      mountPath: /data/scclivedataingestor
+    - name: vol-cm-scc-live-data-ingestor-db-upgrades
+      mountPath: /data/scclivedataingestor-upgrade
+    - name: vol-cm-scc-payout-engine-db
+      mountPath: /data/sccpayoutengine
+    - name: vol-cm-scc-payout-engine-db-upgrades
+      mountPath: /data/sccpayoutengine-upgrade
+    - name: vol-cm-subscribersystem-db
+      mountPath: /data/subscribersystem
+    - name: vol-cm-subscribersystem-db-upgrades
+      mountPath: /data/subscribersystem-upgrade
+    - name: vol-cm-template-management-system-db
+      mountPath: /data/template_management
+    - name: vol-cm-template-management-system-db-upgrades
+      mountPath: /data/template_management-upgrade
+    - name: vol-cm-trip-management-system-db
+      mountPath: /data/tripmanagementsystem
+    - name: vol-cm-trip-management-system-db-upgrades
+      mountPath: /data/tripmanagementsystem-upgrade
+    - name: vol-cm-db-copy
+      mountPath: /scripts
+  containers:
+  - name: schema-installer
+    image: python:3.13-alpine
+    command:
+    - sh
+    - -c
+    - |
+      pip install PyMySQL
+      tail -f /dev/null
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: vol-timezone
+      mountPath: /etc/localtime
+    - name: db-utility-empty
+      mountPath: /schema-install
+  volumes:
+  - name: vol-timezone
+    hostPath:
+      path: /usr/share/zoneinfo/Asia/Dhaka
+  - name: db-utility-empty
+    emptyDir: {}
+  - name: vol-cm-db-ini
+    configMap:
+      name: cm-db-ini
+  - name: vol-cm-db-install
+    configMap:
+      name: cm-db-install
+  - name: vol-cm-access-management-system-db
+    configMap:
+      name: cm-access-management-system-db
+  - name: vol-cm-access-management-system-db-upgrades
+    configMap:
+      name: cm-access-management-system-db-upgrades
+  - name: vol-cm-account-management-service-db
+    configMap:
+      name: cm-account-management-service-db
+  - name: vol-cm-account-management-service-db-upgrades
+    configMap:
+      name: cm-account-management-service-db-upgrades
+  - name: vol-cm-agent-assignment-system-db
+    configMap:
+      name: cm-agent-assignment-system-db
+  - name: vol-cm-agent-assignment-system-db-upgrades
+    configMap:
+      name: cm-agent-assignment-system-db-upgrades
+  - name: vol-cm-alertapp-db
+    configMap:
+      name: cm-alertapp-db
+  - name: vol-cm-alertapp-db-upgrades
+    configMap:
+      name: cm-alertapp-db-upgrades
+  - name: vol-cm-batch-scheduling-db
+    configMap:
+      name: cm-batch-scheduling-db
+  - name: vol-cm-batch-scheduling-db-upgrades
+    configMap:
+      name: cm-batch-scheduling-db-upgrades
+  - name: vol-cm-bi-aggregator-db
+    configMap:
+      name: cm-bi-aggregator-db
+  - name: vol-cm-bi-aggregator-db-upgrades
+    configMap:
+      name: cm-bi-aggregator-db-upgrades
+  - name: vol-cm-bi-tdr-exporter-db
+    configMap:
+      name: cm-bi-aggregator-db
+  - name: vol-cm-bi-tdr-exporter-db-upgrades
+    configMap:
+      name: cm-bi-tdr-exporter-db-upgrades
+  - name: vol-cm-billing-settlement-db
+    configMap:
+      name: cm-billing-settlement-db
+  - name: vol-cm-billing-settlement-db-upgrades
+    configMap:
+      name: cm-billing-settlement-db-upgrades
+  - name: vol-cm-config-services-db
+    configMap:
+      name: cm-config-services-db
+  - name: vol-cm-config-services-db-upgrades
+    configMap:
+      name: cm-config-services-db-upgrades
+  - name: vol-cm-contract-management-system-db
+    configMap:
+      name: cm-contract-management-system-db
+  - name: vol-cm-contract-management-system-db-upgrades
+    configMap:
+      name: cm-contract-management-system-db-upgrades
+  - name: vol-cm-group-management-db
+    configMap:
+      name: cm-group-management-db
+  - name: vol-cm-group-management-db-upgrades
+    configMap:
+      name: cm-group-management-db-upgrades
+  - name: vol-cm-imsbridge-db
+    configMap:
+      name: cm-imsbridge-db
+  - name: vol-cm-imsbridge-db-upgrades
+    configMap:
+      name: cm-imsbridge-db-upgrades
+  - name: vol-cm-integration-services-db
+    configMap:
+      name: cm-integration-services-db
+  - name: vol-cm-integration-services-db-upgrades
+    configMap:
+      name: cm-integration-services-db-upgrades
+  - name: vol-cm-inventory-management-system-db
+    configMap:
+      name: cm-inventory-management-system-db
+  - name: vol-cm-inventory-management-system-db-upgrades
+    configMap:
+      name: cm-inventory-management-system-db-upgrades
+  - name: vol-cm-kyc-db
+    configMap:
+      name: cm-kyc-db
+  - name: vol-cm-kyc-db-upgrades
+    configMap:
+      name: cm-kyc-db-upgrades
+  - name: vol-cm-notification-ui-db
+    configMap:
+      name: cm-notification-ui-db
+  - name: vol-cm-notification-ui-db-upgrades
+    configMap:
+      name: cm-notification-ui-db-upgrades
+  - name: vol-cm-object-store-manager-db
+    configMap:
+      name: cm-object-store-manager-db
+  - name: vol-cm-object-store-manager-db-upgrades
+    configMap:
+      name: cm-object-store-manager-db-upgrades
+  - name: vol-cm-order-management-system-db
+    configMap:
+      name: cm-order-management-system-db
+  - name: vol-cm-order-management-system-db-upgrades
+    configMap:
+      name: cm-order-management-system-db-upgrades
+  - name: vol-cm-product-management-db
+    configMap:
+      name: cm-product-management-db
+  - name: vol-cm-product-management-db-upgrades
+    configMap:
+      name: cm-product-management-db-upgrades
+  - name: vol-cm-region-management-core-db
+    configMap:
+      name: cm-region-management-core-db
+  - name: vol-cm-region-management-core-db-upgrades
+    configMap:
+      name: cm-region-management-core-db-upgrades
+  - name: vol-cm-scc-commission-engine-db
+    configMap:
+      name: cm-scc-commission-engine-db
+  - name: vol-cm-scc-commission-engine-db-upgrades
+    configMap:
+      name: cm-scc-commission-engine-db-upgrades
+  - name: vol-cm-scc-data-aggregator-db
+    configMap:
+      name: cm-scc-data-aggregator-db
+  - name: vol-cm-scc-data-aggregator-db-upgrades
+    configMap:
+      name: cm-scc-data-aggregator-db-upgrades
+  - name: vol-cm-scc-engine-core-db
+    configMap:
+      name: cm-scc-engine-core-db
+  - name: vol-cm-scc-engine-core-db-upgrades
+    configMap:
+      name: cm-scc-engine-core-db-upgrades
+  - name: vol-cm-scc-live-data-ingestor-db
+    configMap:
+      name: cm-scc-live-data-ingestor-db
+  - name: vol-cm-scc-live-data-ingestor-db-upgrades
+    configMap:
+      name: cm-scc-live-data-ingestor-db-upgrades
+  - name: vol-cm-scc-payout-engine-db
+    configMap:
+      name: cm-scc-payout-engine-db
+  - name: vol-cm-scc-payout-engine-db-upgrades
+    configMap:
+      name: cm-scc-payout-engine-db-upgrades
+  - name: vol-cm-subscribersystem-db
+    configMap:
+      name: cm-subscribersystem-db
+  - name: vol-cm-subscribersystem-db-upgrades
+    configMap:
+      name: cm-subscribersystem-db-upgrades
+  - name: vol-cm-template-management-system-db
+    configMap:
+      name: cm-template-management-system-db
+  - name: vol-cm-template-management-system-db-upgrades
+    configMap:
+      name: cm-template-management-system-db-upgrades
+  - name: vol-cm-trip-management-system-db
+    configMap:
+      name: cm-trip-management-system-db
+  - name: vol-cm-trip-management-system-db-upgrades
+    configMap:
+      name: cm-trip-management-system-db-upgrades
+  - name: vol-cm-db-copy
+    configMap:
+      name: cm-db-copy

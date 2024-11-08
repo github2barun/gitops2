@@ -1,0 +1,161 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-ldaplink-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-ldaplink-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/ldaplink-core"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-ldaplink-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-ldaplink-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldaplink
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: ldaplink
+    version: v1
+spec:
+  replicas: {{ .Values.replica.ldaplink }}
+  selector:
+    matchLabels:
+      app: ldaplink
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: ldaplink
+        version: v1
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - ldaplink
+            topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: copy-configs
+        image: centos
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: NAMESPACE_LOGS
+          value: "{{ .Release.Namespace_logs_enabled }}"
+        imagePullPolicy: IfNotPresent
+        command: ['bash','/scripts/configs-copy']
+        volumeMounts:
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-cm-main
+          mountPath: /main
+        - name: vol-cm-ldaplink-main
+          mountPath: /ldaplink-main
+        - name: vol-cm-ldaplink-scripts
+          mountPath: /ldaplink-scripts
+        - name: vol-cm-ldaplink-copy
+          mountPath: /scripts
+      containers:
+      - name: ldaplink
+        image: {{ .Values.image.ldaplink }}
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          tcpSocket:
+            port: 8824
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 8824
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        ports:
+        - containerPort: 8824
+        env:
+        - name: DEFAULT_TIME_ZONE
+          value: "{{ .Values.timezone }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- if eq .Values.resourceApply true }}
+        resources:
+          limits:
+            cpu: '1'
+            memory: 3Gi
+          requests:
+            cpu: '0.5'
+            memory: 2Gi
+        {{- end }}
+        volumeMounts:
+        - name: tz-{{ .Values.country }}
+          mountPath: /etc/localtime
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-logs-ldaplink-{{ .Release.Namespace }}
+          mountPath: {{ .Values.logs }}/ldaplink-core
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timezone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-ldaplink-main
+        configMap:
+          name: cm-ldaplink-main
+      - name: vol-cm-ldaplink-scripts
+        configMap:
+          name: cm-ldaplink-scripts
+      - name: vol-logs-ldaplink-{{ .Release.Namespace }}
+        persistentVolumeClaim:
+          claimName: logs-ldaplink-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      - name: vol-cm-ldaplink-copy
+        configMap:
+          name: cm-ldaplink-copy
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ldaplink-core
+  name: svc-ldaplink
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 8824
+    targetPort: 8824
+  selector:
+    app: ldaplink-core
+  type: ClusterIP

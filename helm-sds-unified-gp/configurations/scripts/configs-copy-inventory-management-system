@@ -1,0 +1,17 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/inventory-management-system/{scripts,templates}
+mkdir -p /opt/seamless/conf/inventory-management-system/templates/{audit,tdr}
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /inventory-management-main/* /opt/seamless/conf/inventory-management-system/
+cp -L /inventory-management-scripts/* /opt/seamless/conf/inventory-management-system/scripts/
+cp -L /inventory-management-audit/* /opt/seamless/conf/inventory-management-system/templates/audit/
+cp -L /inventory-management-tdr/* /opt/seamless/conf/inventory-management-system/templates/tdr/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/inventory-management-system+/var/seamless/log/${NAMESPACE}/inventory-management-system+g" /opt/seamless/conf/inventory-management-system/log4j2.properties
+else
+    echo "Nothing Required"
+fi

@@ -1,0 +1,4 @@
+location /api/scc {
+  include conf.d/support/cors.conf;
+  proxy_pass http://localhost:9596/scc;
+}

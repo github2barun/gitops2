@@ -1,0 +1,1 @@
+ALTER TABLE `serialized_inventory` ADD `owner_history` mediumtext DEFAULT NULL;

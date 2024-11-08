@@ -1,0 +1,160 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-alertapp-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-alertapp-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/alertapp"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-alertapp-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-alertapp-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertapp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: alertapp
+    version: v1
+spec:
+  replicas: {{ .Values.replica.alertapp }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+       maxSurge:  40%
+       maxUnavailable: 20%
+  selector:
+    matchLabels:
+      app: alertapp
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: alertapp
+        version: v1
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - alertapp
+            topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: copy-configs
+        image: centos
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: NAMESPACE_LOGS
+          value: "{{ .Release.Namespace_logs_enabled }}"
+        imagePullPolicy: IfNotPresent
+        command: ['bash','/scripts/configs-copy']
+        volumeMounts:
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-cm-main
+          mountPath: /main
+        - name: vol-cm-alertapp-main
+          mountPath: /alertapp
+        - name: vol-cm-alertapp-copy
+          mountPath: /scripts
+      containers:
+      - name: alertapp
+        image: {{ .Values.image.alertapp }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8375
+        env:
+        - name: DEFAULT_TIME_ZONE
+          value: "{{ .Values.timezone }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- if eq .Values.resourceApply true }}
+        resources:
+          limits:
+            cpu: '1'
+            memory: 3Gi
+          requests:
+            cpu: '0.5'
+            memory: 2Gi
+        {{- end }}
+        volumeMounts:
+        - name: tz-{{ .Values.country }}
+          mountPath: /etc/localtime
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-logs-alertapp
+          mountPath: {{ .Values.logs }}/alertapp
+        {{- if eq .Values.jar_volume true }}
+        - name: vol-logs-apmjar
+          mountPath: /apmjar
+        {{- end }}
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timezone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-alertapp-main
+        configMap:
+          name: cm-alertapp-main
+      - name: vol-logs-alertapp
+        persistentVolumeClaim:
+          claimName: logs-alertapp-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      - name: vol-cm-alertapp-copy
+        configMap:
+          name: cm-alertapp-copy
+      {{- if eq .Values.jar_volume true }}
+      - name: vol-logs-apmjar
+        persistentVolumeClaim:
+          claimName: logs-apmjar-{{ .Release.Namespace }}
+      {{- end }}
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: alertapp
+  name: svc-alertapp
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 8375
+    targetPort: 8375
+  selector:
+    app: alertapp
+  type: ClusterIP

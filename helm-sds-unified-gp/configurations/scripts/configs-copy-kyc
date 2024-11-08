@@ -1,0 +1,19 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/kyc/{templates,actions_groovy,mappings,notification}
+mkdir -p /opt/seamless/conf/kyc/templates/{audit,tdr}
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /kyc-main/* /opt/seamless/conf/kyc/
+cp -L //kyc-templates-audit/* /opt/seamless/conf/kyc/templates/audit/
+cp -L //kyc-templates-tdr/* /opt/seamless/conf/kyc/templates/tdr/
+cp -L /kyc-actions-groovy/* /opt/seamless/conf/kyc/actions_groovy/
+cp -L /kyc-mappings/* /opt/seamless/conf/kyc/mappings/
+cp -L /kyc-notification/* /opt/seamless/conf/kyc/notification/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/kyc+/var/seamless/log/${NAMESPACE}/kyc+g" /opt/seamless/conf/kyc/log4j2.xml
+else
+    echo "Nothing Required"
+fi

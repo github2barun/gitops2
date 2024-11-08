@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{DEFAULT} [%-5level][%t] - %c - %msg%n%throwable"/>
+        </Console>
+
+        <Console name="RequestConsole" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%msg%n%throwable"/>
+        </Console>
+
+        <Console name="ResponseConsole" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%msg%n%throwable"/>
+        </Console>
+
+        <RollingFile name="RollingFile"
+                     fileName="/var/seamless/log/notification-manager/notification-manager.log" append="true"
+                     filePattern="/var/seamless/log/notification-manager/notification-manager.%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{DEFAULT} [%-5level][%t] - [%c{1}] [%X{ersReference}] - %msg%n%throwable</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+        
+        <RollingFile name="dataDump"
+                     fileName="/var/seamless/log/notification-manager/notification-manager-data.dump" append="true"
+                     filePattern="/var/seamless/log/notification-manager/notification-manager-data.%d{yyyy-MM-dd}.dump">
+            <PatternLayout>
+                <Pattern>%m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>     
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.seamless" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="se.seamless" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="com.seamless.ers.txe.transaction.model.ERSTransferTransaction" level="OFF"  additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="com.hazelcast" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.apache.cxf.interceptor.LoggingOutInterceptor" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.apache.cxf.interceptor.LoggingInInterceptor" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+    
+        <Root level="INFO" >
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+        
+        <Logger name="com.seamless.common.data.dump.DataFeeder" level="INFO" additivity="true">
+            <AppenderRef ref="dataDump"/>
+        </Logger>          
+
+    </Loggers>
+
+</Configuration>

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/bi-aggregator/{scripts,mapping}
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /biaggregator-main/* /opt/seamless/conf/bi-aggregator/
+cp -L /biaggregator-scripts/* /opt/seamless/conf/bi-aggregator/scripts/
+cp -L /biaggregator-scripts2/* /opt/seamless/conf/bi-aggregator/scripts/
+cp -L /biaggregator-mapping/* /opt/seamless/conf/bi-aggregator/mapping/
+
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/bi-aggregator+/var/seamless/log/${NAMESPACE}/bi-aggregator+g" /opt/seamless/conf/bi-aggregator/log4j2.xml
+else
+    echo "Nothing Required"
+fi

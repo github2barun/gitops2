@@ -1,0 +1,1 @@
+ALTER TABLE `module_endpoints` ADD COLUMN IF NOT EXISTS `default_flag` tinyint DEFAULT 0 NOT NULL AFTER `available_until`;

@@ -1,0 +1,4 @@
+location /api/imsbridge {
+    include conf.d/support/cors.conf;
+    proxy_pass http://localhost:8919/imsbridge;
+}

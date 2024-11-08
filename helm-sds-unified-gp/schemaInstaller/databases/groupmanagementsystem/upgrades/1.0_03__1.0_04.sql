@@ -1,0 +1,1 @@
+ALTER TABLE workflow_tracker ADD last_modified_date DATETIME NOT NULL AFTER notify_first_approval;

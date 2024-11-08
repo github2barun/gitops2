@@ -1,0 +1,2 @@
+ALTER TABLE trip ADD COLUMN reseller varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The reseller who intiated the trip'; 
+ALTER TABLE trip CHANGE selfload self_load varchar(2) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'The selfload';

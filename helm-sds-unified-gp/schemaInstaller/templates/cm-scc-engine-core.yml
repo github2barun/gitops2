@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-scc-engine-core-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/sccengine/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-scc-engine-core-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/sccengine/upgrades/*").AsConfig | indent 2 }}

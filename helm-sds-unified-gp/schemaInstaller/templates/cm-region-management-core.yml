@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-region-management-core-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/regionmanagement/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-region-management-core-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/regionmanagement/upgrades/*").AsConfig | indent 2 }}

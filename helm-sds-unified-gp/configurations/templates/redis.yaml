@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-redis-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/redis/*").AsConfig | indent 2 }}

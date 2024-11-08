@@ -1,0 +1,35 @@
+## This section contains the details of the servers where RPM-based components
+## are running
+## i.e, Databases, Elastic-Search, Logstash, Redis, Kannel &
+## Scc-data-aggregator
+
+## This info is required to generate an haproxy config that will help redirect
+## K8 components to components running outside K8 cluster via haproxy deployment
+
+## If there need be to add any other service, define a variable for those here
+## & corressponding config section in the haproxy.cfg file
+
+# nonClusterComponents:
+# ## In case of Galera, you can add as much node as you wish in list of servers below
+#   transaction_databases:
+#   - name:
+#     ip:
+
+# ## In case of Galera, you can add as much node as you wish in list of servers below
+#   reporting_databases:
+#   - name:
+#     ip:
+
+#   redis:
+#   - name:
+#     ip:
+
+## In case of ELK cluster, you can add as much node as you wish in list of servers below
+  # elasticSearch:
+  # - name:
+  #   ip:
+
+  # logstash:
+  # - name:
+  #   ip:
+## not relevant to GP

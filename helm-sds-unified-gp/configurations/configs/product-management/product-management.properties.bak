@@ -1,0 +1,255 @@
+spring.application.name=product-management
+server.port=8012
+server.servlet.context-path=/pms/v1
+messages.source.files.path=/opt/seamless/conf/product-management
+
+#logging.config=src/main/resources/lo.properties
+logging.config=/opt/seamless/conf/product-management/log4j2.properties
+
+#spring.jpa.properties.hibernate.show_sql=true
+
+db-host=localhost
+db-port=3306
+
+spring.datasource.url=jdbc:mariadb://${db-host}:${db-port}/pms
+spring.datasource.username=refill
+spring.datasource.password=refill
+
+# The following config is used by ersinstall to install database
+pms.database.url=jdbc:mariadb://localhost:3306/pms
+
+# Allows Hibernate to generate SQL optimized for a particular DBMS
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDB103Dialect
+
+## spring mvc pattern matcher
+spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
+
+#-------------------------------------------------------------------------------------
+#Configure free marker for data feeds
+#-------------------------------------------------------------------------------------
+dataFeed.freemarker.file.path=/opt/seamless/conf/product-management/templates/tdr
+#-------------------------------------------------------------------------------------
+#Configuration for executor service
+#-------------------------------------------------------------------------------------
+threadpoolmanager.pools.dataFeed.targetId=com.seamless.common.data.dump.dataFeed
+threadpoolmanager.pools.dataFeed.corePoolSize=25
+threadpoolmanager.pools.dataFeed.maxPoolSize=40
+threadpoolmanager.pools.dataFeed.keepAliveTime=60000
+threadpoolmanager.pools.dataFeed.keepAliveTimeUnit=MILLISECONDS
+#-------------------------------------------------------------------------------------
+#Data feed version
+#-------------------------------------------------------------------------------------
+dataFeed.version=1
+dataFeed.componentName=pms
+dataFeed.eventType.report=Report
+dataFeed.eventType.audit=AUDIT
+
+#-------------------------------------------------------------------------------------
+# Audit feed config
+#-------------------------------------------------------------------------------------
+auditFeed.version=1
+auditFeed.componentName=pms
+auditFeed.eventType=AUDIT
+# list of events can be either `INCLUDE` or `EXCLUDE`
+audit.feed.list.type=EXCLUDE
+# comma separated list
+audit.feed.list.events=
+auditFeed.freemarker.file.path=/opt/seamless/conf/product-management/templates/audit
+auditFeed.default.template=
+
+# Enable or disable from and to diff for audit objects
+auditFeed.events.with.changes.enabled=false
+# list of events can be either `INCLUDE` or `EXCLUDE`
+auditFeed.events.with.changes.type=EXCLUDE
+# comma separated list of events to enable audit comparison
+auditFeed.events.with.changes.list=
+
+scc.live.data.ingestor.baseUri=http://localhost:9598
+scc.live.data.ingestor.restApiUri=/scc-live-data-ingestor/data/v1/ingestData
+scc.live.data.ingestor.eventSourceType=auditFieldComparison
+
+template.ADD_PRODUCT=pmsFeed_product.ftl
+template.UPDATE_PRODUCT=pmsFeed_product.ftl
+template.DELETE_PRODUCT=pmsFeed.ftl
+template.ADD_PRODUCT_VARIANT=pmsFeed_variant.ftl
+template.UPDATE_PRODUCT_VARIANT=pmsFeed_variant.ftl
+template.DELETE_PRODUCT_VARIANT=pmsFeed.ftl
+template.ADD_TAX=pmsFeed_tax.ftl
+template.UPDATE_TAX=pmsFeed_tax.ftl
+template.DELETE_TAX=pmsFeed.ftl
+template.ADD_CATEGORY=pmsFeed_category.ftl
+template.UPDATE_CATEGORY=pmsFeed_category.ftl
+template.DELETE_CATEGORY=pmsFeed.ftl
+template.ADD_SUPPLIER=pmsFeed_supplier.ftl
+template.UPDATE_SUPPLIER=pmsFeed_supplier.ftl
+template.DELETE_SUPPLIER=pmsFeed.ftl
+template.ADD_STATE=pmsFeed_state.ftl
+template.UPDATE_STATE=pmsFeed_state.ftl
+template.ADD_WORKFLOW_OPERATION=pmsFeed_operation.ftl
+template.UPDATE_WORKFLOW_OPERATION=pmsFeed_operation.ftl
+template.DELETE_WORKFLOW_OPERATION=pmsFeed.ftl
+template.ADD_STATE_TRANSITION=pmsFeed_transition.ftl
+template.DELETE_STATE_TRANSITION=pmsFeed.ftl
+template.ADD_WORKFLOW=pmsFeed_workflow.ftl
+template.UPDATE_WORKFLOW=pmsFeed_workflow.ftl
+template.DELETE_WORKFLOW=pmsFeed.ftl
+template.ADD_TRANSITION_PERMISSION=pmsFeed.ftl
+
+audit.template.ADD_PRODUCT=pmsFeed_auditTrail.ftl
+audit.template.UPDATE_PRODUCT=pmsFeed_auditTrail.ftl
+audit.template.DELETE_PRODUCT=pmsFeed_auditTrail.ftl
+audit.template.ADD_PRODUCT_VARIANT=pmsFeed_auditTrail.ftl
+audit.template.UPDATE_PRODUCT_VARIANT=pmsFeed_auditTrail.ftl
+audit.template.DELETE_PRODUCT_VARIANT=pmsFeed_auditTrail.ftl
+audit.template.ADD_CATEGORY=pmsFeed_auditTrail.ftl
+audit.template.UPDATE_CATEGORY=pmsFeed_auditTrail.ftl
+audit.template.DELETE_CATEGORY=pmsFeed_auditTrail.ftl
+audit.template.BULK_ADD_UPDATE_PRODUCT_VARIANT=pmsFeed_auditTrail.ftl
+audit.template.FETCH_PRODUCTS=pmsFeed_auditTrail.ftl
+audit.template.SEARCH_PRODUCTS=pmsFeed_auditTrail.ftl
+audit.template.FETCH_PRODUCT_BY_ID=pmsFeed_auditTrail.ftl
+audit.template.FETCH_PRODUCT_BY_CODE=pmsFeed_auditTrail.ftl
+audit.template.FETCH_PRODUCT_BY_SKU=pmsFeed_auditTrail.ftl
+audit.template.FETCH_PRODUCT_VARIANTS=pmsFeed_auditTrail.ftl
+audit.template.FETCH_PRODUCT_VARIANT_BY_ID=pmsFeed_auditTrail.ftl
+
+############# CORS config ####################
+cors.enable=false
+#comma separated origin list
+cors.allowedorigins=http://localhost:9090,http://localhost:9091
+
+inventory.count.url=http://localhost:10103/ims/v1/inventory-count
+pagesize=100
+variant.export.headers=product.name,imageUrl,availableCount,totalCount,product.path,productSKU,product.productType.code,unitPrice
+variant.export.display.headers=Name,Image,Available Count,Total Count,Category,Product SKU,Product Type,Price
+variant.export.file.name=Products.csv
+
+dataKeyForRelatedProduct=plans
+
+pms.language.support=en,gb,fr
+product.suppliers.default=operator
+
+product.variant.weight.units=CENTIGRAM,GRAM,MILLIGRAM,HECTOGRAM,KILOGRAM
+product.variant.volume.units=CUBIC_DECIMETER,CUBIC_METER,CUBIC_CENTIMETER,LITRE
+product.variant.warranty.units=month,year
+product.variant.measure.units=meter,litre
+
+product.workflow.state.codes=Available,Reserved,Sold
+
+product.variant.status.default=available
+product.variant.priority.key=priority
+product.variant.priority.validate=true
+
+product.physical.types=serialised,non-serialised,trackable-non-serialised,batch
+
+cache.enabled=false
+rollback.on.cache.failure=true
+spring.redis.host=localhost
+spring.redis.port=6379
+spring.redis.prefix=pms-
+#spring.redis.username=default
+#spring.redis.password=default
+#spring.redis.useSsl=false
+
+# Time to live in minutes
+cache.ttl=10
+
+############ Sort & Filter Configurations ###############
+product.category.fetch.filter.map={ 'name' : 'name', 'description' : 'description', 'status' : 'status', 'productType' : 'productType'}
+product.category.fetch.sort.map={ 'name' : 'name', 'description' : 'description', 'status' : 'status'}
+
+## define the filter operator type only when the filter criteria are a fix of numeric, non-numeric or date.
+## else we can keep this map as empty {}. if kept empty there would be no validation on any filter criteria type
+product.category.fetch.filter.criteria.type.map={}
+
+product.category.sort.default=name
+## define the filter operator type only when the filter criteria are a fix of numeric, non-numeric or date.
+## else we can keep this map as empty {}. if kept empty there would be no validation on any filter criteria type
+product.category.fetch.filter.criteria.type.map={}
+product.category.sort.default=name
+product.variant.fetch.filter.map={'variantId':'variantId', 'productSKU':'productSKU', 'supplierReference':'supplierReference', 'status':'status', 'price':'unitPrice', 'currency': 'currency', 'termsAndConditions':'terms'}
+product.variant.fetch.sort.map={'variantId':'variantId', 'productSKU':'productSKU', 'supplierReference':'supplierReference', 'status':'status', 'price':'unitPrice', 'currency': 'currency', 'termsAndConditions':'terms'}
+product.variant.sort.default=variantId
+## define the filter operator type only when the filter criteria are a fix of numeric, non-numeric or date.
+## else we can keep this map as empty {}. if kept empty there would be no validation on any filter criteria type
+product.variant.fetch.filter.criteria.type.map={'variantId':'NUMERIC', 'productSKU':'NON_NUMERIC', 'supplierReference':'NON_NUMERIC', 'status':'NON_NUMERIC', 'unitPrice':'NUMERIC', 'currency': 'NON_NUMERIC', 'terms':'NON_NUMERIC'}
+product.tax.fetch.filter.map={'id':'taxId', 'taxType':'taxType', 'percentValue':'percentValue', 'fixedValue':'fixedValue'}
+product.tax.fetch.sort.map={'id':'taxId', 'taxType':'taxType', 'percentValue':'percentValue', 'fixedValue':'fixedValue'}
+## define the filter operator type only when the filter criteria are a fix of numeric, non-numeric or date.
+## else we can keep this map as empty {}. if kept empty there would be no validation on any filter criteria type
+product.tax.fetch.filter.criteria.type.map={'taxId':'NUMERIC', 'taxType':'NON_NUMERIC', 'percentValue':'NUMERIC', 'fixedValue':'NUMERIC'}
+
+
+### Default Config ###
+pms.data.fetch.default.perPage=30
+pms.data.fetch.default.page=1
+
+product.addProduct.set.default.enabled=false
+product.addProduct.set.default.workflowId=1
+product.addProduct.set.default.supplierId=1
+product.addProduct.set.default.supplierReference=OPERATOR
+default_currency=BDT
+product.fetch.invalid.category.return.no.products=true
+
+tax.percentage.min=0
+tax.percentage.max=100
+
+product.variant.update.batch.allowed=false
+############# Kafka configuration ####################
+kafka.enabled=false
+
+spring.kafka.producer.bootstrap-servers=localhost:9093
+pms-out-stream.pms-version.topic.name=product-management-dev
+pms-out-stream.partitionCount=1
+pms-out-stream.replicaCount=1
+
+spring.kafka.security.protocol.enable=false
+spring.kafka.security.protocol=SSL
+spring.kafka.ssl.truststore.location=/opt/seamless/conf/product-management/secrets/kafka.broker.truststore.jks
+spring.kafka.ssl.truststore.password=Kafka@123
+spring.kafka.ssl.keystore.location=/opt/seamless/conf/product-management/secrets/kafka.broker.keystore.jks
+spring.kafka.ssl.keystore.password=Kafka@123
+spring.kafka.ssl.key.password=Kafka@123
+spring.kafka.ssl.endpoint.identification.algorithm=
+spring.kafka.ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
+spring.kafka.ssl.client.auth=required
+#pms-out-stream.pms-version.produce.auto.start=true
+
+
+
+################# Product Sync With Link Config Starts ##############
+
+product.sync_with.link=false
+
+################# Link Config Starts #####################
+erp.link.proxy.uri=http://localhost:8094
+erp.link.proxy.name=VFO
+erp.link.proxy.postMapping=/vfo-link/request
+erp.link.proxy.create.sku.operation.id=CREATESKU
+erp.link.proxy.update.sku.operation.id=UPDATESKU
+
+erp.link.rest.template.http.max.idle.second=50
+erp.link.rest.template.http.keep.alive.second=30
+erp.link.rest.template.http.connection.timeout.second=20
+erp.link.rest.template.http.read.timeout.second=20
+################# Link Config End #####################
+
+
+################# Default system locale #################
+#locale.language=en
+# Header name for extracting reseller language
+#locale.languageHeaderName=accept-language
+# Enable/disable reseller's preferred language
+#locale.userLangPreferenceEnabled=true
+################# Default system locale End #################
+
+################# Product Sync With Link Config End ##############
+
+############# Custom Additional Fields Validation Config ###################
+#validation is done on both product and variant level.
+#validate.additional-field.names can have 'comma' separated values
+validate.additional-field.names=iccid-range
+validate.additional-field.iccid-range.1.regexp=(\\d{20}-\\d{20}\\s*,\\s*)*\\d{20}-\\d{20}
+validate.additional-field.iccid-range.2.regexp=(\\d{20}-\\d{20},)*\\d{20}-\\d{20}
+validate.additional-field.iccid-range.range=true
+############################################################################

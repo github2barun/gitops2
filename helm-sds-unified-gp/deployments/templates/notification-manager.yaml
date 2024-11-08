@@ -1,0 +1,158 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logs-notification-manager-{{ .Release.Namespace }}
+  labels:
+    type: local
+    name: logs-notification-manager-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "{{ .Values.logs }}/notification-manager"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logs-notification-manager-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+  selector:
+    matchLabels:
+      type: local
+      name: logs-notification-manager-{{ .Release.Namespace }}
+  storageClassName: manual
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-manager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: notification-manager
+spec:
+  replicas: {{ .Values.replica.notificationmanager }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: notification-manager
+  template:
+    metadata:
+      labels:
+        app: notification-manager
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - notification-manager
+            topologyKey: "kubernetes.io/hostname"
+      initContainers:
+      - name: copy-configs
+        image: centos
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: NAMESPACE_LOGS
+          value: "{{ .Release.Namespace_logs_enabled }}"
+        imagePullPolicy: IfNotPresent
+        command: ['bash','/scripts/configs-copy']
+        volumeMounts:
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - name: vol-cm-main
+          mountPath: /main
+        - name: vol-cm-notification-manager-main
+          mountPath: /notification-manager-main
+        - name: vol-cm-notification-manager-feeder
+          mountPath: /notification-manager-feeder
+        - name: vol-cm-notification-manager-keys
+          mountPath: /notification-manager-keys
+        - name: vol-cm-notification-manager-copy
+          mountPath: /scripts
+      containers:
+      - name: notification-manager
+        image: {{ .Values.image.notificationmanager }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8277
+        env:
+        - name: DEFAULT_TIME_ZONE
+          value: "{{ .Values.timezone }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- if eq .Values.resourceApply true }}
+        resources:
+          limits:
+            cpu: '1'
+            memory: 3Gi
+          requests:
+            cpu: '0.5'
+            memory: 2Gi
+        {{- end }}
+        volumeMounts:
+        - name: tz-{{ .Values.country }}
+          mountPath: /etc/localtime
+        - name: config-dir-main
+          mountPath: {{ .Values.conf }}
+        - mountPath: {{ .Values.logs }}/notification-manager
+          name: vol-logs-notification-manager
+      volumes:
+      - name: tz-{{ .Values.country }}
+        hostPath:
+          path: /usr/share/zoneinfo/{{ .Values.timezone }}
+      - name: vol-cm-main
+        configMap:
+          name: cm-main
+      - name: vol-cm-notification-manager-main
+        configMap:
+          name: cm-notification-manager-main
+      - name: vol-cm-notification-manager-feeder
+        configMap:
+          name: cm-notification-manager-feeder
+      - name: vol-cm-notification-manager-keys
+        configMap:
+          name: cm-notification-manager-keys
+      - name: vol-logs-notification-manager
+        persistentVolumeClaim:
+          claimName: logs-notification-manager-{{ .Release.Namespace }}
+      - name: config-dir-main
+        emptyDir: {}
+      - name: vol-cm-notification-manager-copy
+        configMap:
+          name: cm-notification-manager-copy
+      imagePullSecrets:
+      - name: {{ .Values.secret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: notification-manager
+  name: svc-notification-manager
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 8277
+    targetPort: 8277
+  selector:
+    app: notification-manager
+  type: ClusterIP

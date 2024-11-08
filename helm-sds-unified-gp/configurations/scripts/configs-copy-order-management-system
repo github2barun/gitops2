@@ -1,0 +1,16 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/order-management-system/templates/{audit,notification,tdr}
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /order-management-main/* /opt/seamless/conf/order-management-system/
+cp -L /order-management-audit/* /opt/seamless/conf/order-management-system/templates/audit/
+cp -L /order-management-notification/* /opt/seamless/conf/order-management-system/templates/notification/
+cp -L /order-management-tdr/* /opt/seamless/conf/order-management-system/templates/tdr/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+    echo "namespace-based logs will be enabled"
+    sed -i "s+/var/seamless/log/order-management-system+/var/seamless/log/${NAMESPACE}/order-management-system+g" /opt/seamless/conf/order-management-system/log4j2.properties
+else
+    echo "Nothing Required"
+fi

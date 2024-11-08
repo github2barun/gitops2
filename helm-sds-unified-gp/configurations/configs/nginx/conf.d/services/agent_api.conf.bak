@@ -1,0 +1,4 @@
+location /api/aas/ {
+	include conf.d/support/cors.conf;
+    proxy_pass http://localhost:11001/aas/;
+}

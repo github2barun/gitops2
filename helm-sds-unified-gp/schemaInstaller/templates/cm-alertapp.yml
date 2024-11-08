@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-alertapp-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/alertapp/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-alertapp-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/alertapp/upgrades/*").AsConfig | indent 2 }}

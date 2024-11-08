@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "seamlessoneapp-dev",
+  "private_key_id": "38ed574836e7007d30da6ead1fd586a256ab7cc7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQpyDKyu7IUP3e\nhrR8joW2+3Efke69PLdWaX6SNrpCmUfWPKNP8uV/yGJTVghkFirLrKDRjY4GhuTy\n4UGI7FHO7ZAyuq88CZ0kf7L0ClIsZbzamepbfmFwkUZk1h3x2wutEpykccnPsOyL\nRIvbTz4wImdwPt+Cyyc6ibw5DiM56Ex1cV/nHf3iRG9ZzkaXczCr6+II6SoPAbn9\nuzICgt26S82sEPQmpz7TW5Ol2BjePG243FM2ulKgQf8E1EHTo4EQR6fr2IhBLVqU\nRJwDStmYF7I0eL1uPUZQMCfThBGu/bEnY2q2IiWNAxbh9tEFZHp3Q0Lo4Tduw8b4\nJV5VTjgvAgMBAAECggEABebJ893bGULsCiZMOLX0HvYsGwBqTwgPrE4XISu3h2H8\nD9BlrmYj3S/iZTaYYATnD2Zq7AlDt+X4ajqDhIKzM6gxNCGLeEq/5Ciae82PyUvU\nOProxoYjyUITymp80VYNOkcrjubdTTHnYAFR0xFdW0h11F+PcvqHTCk1Aiz5Q2Cf\nyg4cozjMNdZYrMzp4ml4frTriuyXBfy+PM4fff2bCkbhrPSA+IMjIdFKYaYPwREF\nKSviH6smIfmKCmKGGuo/sdiiZR8NPhEXjPpRDTuKgOVJfA7QN7hXnKrATZ3H7wNW\nkTV2XuWLe0Xk/7D3xQg7lRxz7UsYseRkZfSngyJDsQKBgQDnOl4gNqC+5LykD2RB\npg4F1u037JqUNormqB/ciumSGuSQGC+wjKJeBkdJ104n7cRPbUtwMEosQADpKzVl\nR34f+scP13d+Pcts5DbLbHOSbLCGSao11xCu1odQ4eiwDLrCF6U/kYLGw5u3UHsM\n7BfJc+1UL3Eg8WQCOPe7OpiP/wKBgQDnAZ3pHqDRXVG0OfKPseftcF3LlVvSOhQW\nfKalqWb7H3LZGSNCdIIcYWqOwAGOBIkiGynWoLv/bsBbsW67mQehuXLKIKsDkKYY\n7NRKFiR8gdFIjmbpaiIjdu0ZENO927IoWXU/SV7aF3N4K0J8oPWPYEbD4JuGIXE/\ni18Iyi9X0QKBgDKFNzGUnfR3Z5v03PPXAzNVbUkNwgxmCl0xGJ0IINZSV+P/1NOf\nNo6SkprYlvP0aDLub1AYzOv0I/7N+QGi6DS2hy235xzHBZ5KEorJrEquwrbke3L+\nBWAd8TzDzyI/9cIYhntoIImrDWe1Bt2g6+WRFaaSIwaOl0pBBid7OwAjAoGBAMgA\ngVyFVQ0Pc57LkPPSPxA2+i45+U6xVBUIBSxm169SUhgeiIWP49p4iU5gdLgluykZ\nRYb6kOodVFPO8iVf39ioe/b+g7HJedUYrtAaDarypmTgTb+HUVlNLQhHplu5q6z9\njuKlPocqSKHhKmZG4XQqEfqjK2Pc7nTq0PQGQSkRAoGAOBUsnnoVuPrfZ/UccjYR\nm3qqOyFBTkTkHK0tvmIoXJS8FUsxIEGhTeLQuGoNjpjrm0ZuVA+RS/zbMMde0kd/\nxYXFqSa106wNOeW2sJIHSi8Z1xFwerDwuNO2xZYEellfR/C1uUngYn1H3+W9btSG\nVQFzHIBf25za7f4m/G1sWFA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-ixer8@seamlessoneapp-dev.iam.gserviceaccount.com",
+  "client_id": "113847943310383085764",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ixer8%40seamlessoneapp-dev.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

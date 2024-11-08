@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-access-management-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/access-management-system/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-access-management-templates
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/access-management-system/templates/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-access-management-audit-templates
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/access-management-system/auditFeed/templates/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-access-management-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-access-management-system" | quote }}

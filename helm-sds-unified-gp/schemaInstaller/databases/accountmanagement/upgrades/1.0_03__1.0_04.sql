@@ -1,0 +1,1 @@
+DROP TABLE `accountmanagement`.`account_type_contract`;

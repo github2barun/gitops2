@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/kyc/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-templates-audit
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/kyc/templates/audit/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-templates-tdr
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/kyc/templates/tdr/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-actions
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/kyc/actions_groovy/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-mappings
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/kyc/mappings/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-notification
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/kyc/notification/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-kyc-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-kyc" | quote }}

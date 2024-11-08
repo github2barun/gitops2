@@ -1,0 +1,3 @@
+Hi,
+
+Workflow [[${workflow}]] is assigned for Approval.

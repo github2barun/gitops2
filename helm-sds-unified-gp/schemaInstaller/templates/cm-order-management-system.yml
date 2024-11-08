@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-system-db
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/order_management_system/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-order-management-system-db-upgrades
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "databases/order_management_system/upgrades/*").AsConfig | indent 2 }}

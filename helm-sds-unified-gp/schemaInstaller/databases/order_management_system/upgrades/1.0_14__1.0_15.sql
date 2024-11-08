@@ -1,0 +1,1 @@
+ALTER TABLE `invoice` MODIFY COLUMN `status` VARCHAR (50) ;

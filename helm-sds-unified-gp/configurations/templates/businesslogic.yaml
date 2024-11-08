@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-businesslogic-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/businesslogic/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-businesslogic-zookeeper
+  namespace: {{ .Release.Namespace }}
+data:
+  zoo.cfg:  |
+    {{ (.Files.Get "configs/zookeeper/zoo.cfg") | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-businesslogic-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-businesslogic" | quote }}

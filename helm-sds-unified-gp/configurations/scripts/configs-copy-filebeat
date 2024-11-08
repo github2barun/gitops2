@@ -1,0 +1,14 @@
+#!/bin/bash
+
+mkdir -p /opt/seamless/conf/filebeat
+
+cp -L /main/* /opt/seamless/conf/
+cp -L /filebeat/* /opt/seamless/conf/filebeat/
+
+if [[ "$NAMESPACE_LOGS" == "true" ]]; then
+  echo "namespace-based logs will be enabled"
+  sed -i "s+/var/seamless/log/filebeat+/var/seamless/log/${NAMESPACE}/filebeat+g" /opt/seamless/conf/filebeat/filebeat.yml
+  sed -i "s+/var/seamless/log/filebeat+/var/seamless/log/${NAMESPACE}/filebeat+g" /opt/seamless/conf/filebeat/log4j.properties
+else
+  echo "Nothing Required"
+fi

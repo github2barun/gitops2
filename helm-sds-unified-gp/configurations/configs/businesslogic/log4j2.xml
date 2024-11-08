@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+        <Property name="APP_LOG_ROOT">/var/seamless/log/businesslogic</Property>
+        <Property name="APP_LOG_FILE_NAME">businesslogic.log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="LogToFile" fileName="${APP_LOG_ROOT}/${APP_LOG_FILE_NAME}">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.seamless" level="debug" additivity="false">
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework.boot" level="info" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+            <AppenderRef ref="LogToFile"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>

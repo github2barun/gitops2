@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-inventory-management-main
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/inventory-management-system/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-inventory-management-audit
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/inventory-management-system/templates/audit/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-inventory-management-tdr
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/inventory-management-system/templates/tdr/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-inventory-management-scripts
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "configs/inventory-management-system/scripts/*").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-inventory-management-copy
+  namespace: {{ .Release.Namespace }}
+data:
+  configs-copy: {{ .Files.Get "scripts/configs-copy-inventory-management-system" | quote }}

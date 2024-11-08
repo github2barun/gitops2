@@ -1,0 +1,243 @@
+{
+  "rabbit_version": "3.10.7",
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "BMfxN8drrYcIqXZMr+pWTpDT0nMcOagMduLX0bjr4jwud/pN",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "scc-aggregator-failure-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-aggregator-success-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-commission-failure-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-commission-success-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-engine-campaign-create-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-engine-campaign-modify-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-engine-consumer-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-live-ingestor-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "scc-payout-success-queue-dev",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "scc-aggregator-exchange-dev",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "scc-commission-direct-exchange-dev",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "scc-engine-exchange-dev",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "scc-live-ingestor-exchange-dev",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "scc-payout-exchange-dev",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "scc-aggregator-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-aggregator-failure-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-aggregator-failure-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-aggregator-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-aggregator-success-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-aggregator-success-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-commission-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-commission-failure-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-commission-failure-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-commission-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-commission-success-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-commission-success-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-payout-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-payout-failure-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-payout-failure-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-payout-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-payout-success-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-payout-success-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-engine-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-engine-campaign-create-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-engine-campaign-create-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-engine-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-engine-campaign-modify-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-engine-campaign-modify-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-engine-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-engine-consumer-queue-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-engine-consumer-routing-key-dev",
+      "arguments": {}
+    },
+    {
+      "source": "scc-live-ingestor-exchange-dev",
+      "vhost": "/",
+      "destination": "scc-live-ingestor-dev",
+      "destination_type": "queue",
+      "routing_key": "scc-live-ingestor-routing-key-dev",
+      "arguments": {}
+    }
+
+  ]
+}
