@@ -1,4 +1,0 @@
-location /api/osm {
-	include conf.d/support/cors.conf;
-    proxy_pass http://localhost:3000/osm;
-}

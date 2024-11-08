@@ -1,3 +1,0 @@
-<html xmlns:th="http://www.thymeleaf.org" th:inline="text" th:remove="tag">
-<th:block th:if="${transaction.confirmationAction} eq null">Stock has been successfully returned to [[${transaction.sender.id}]]  via return-order [[${transaction.orderId}]].</th:block><th:block th:unless="${transaction.confirmationAction} eq null"><th:block th:switch="${transaction.confirmationAction.name()}"><th:block th:case="CONFIRM">Stock has been successfully returned to [[${transaction.sender.id}]]  via return-order [[${transaction.orderId}]].</th:block><th:block th:case="REJECT">Stock return-order [[${transaction.orderId}]] has been rejected.</th:block></th:block></th:block>
-</html>

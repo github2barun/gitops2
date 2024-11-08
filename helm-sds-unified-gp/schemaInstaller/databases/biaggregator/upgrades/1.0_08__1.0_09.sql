@@ -1,1 +1,0 @@
-ALTER TABLE `bi`.`total_kyc_sales` ADD COLUMN `simType` VARCHAR(255) DEFAULT NULL;

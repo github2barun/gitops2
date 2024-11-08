@@ -1,1 +1,0 @@
-ALTER TABLE pms.related_product_variant ADD COLUMN relation_type varchar(10) DEFAULT 'RELATED';

@@ -1,6 +1,0 @@
-Fail to submit batch file
-
-File Name: [[${context.fileName}]]   
-Import Type: [[${context.serviceType}]] : [[${context.serviceSubType}]]  
-User: [[${context.uploadedBy}]]
-    

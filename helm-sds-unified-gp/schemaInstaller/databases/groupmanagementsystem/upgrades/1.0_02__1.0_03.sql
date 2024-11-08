@@ -1,1 +1,0 @@
-ALTER TABLE workflow_tracker ADD notify_first_approval TINYINT(1) DEFAULT 0 AFTER channel;

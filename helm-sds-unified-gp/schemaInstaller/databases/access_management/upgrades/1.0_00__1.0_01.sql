@@ -1,1 +1,0 @@
-ALTER TABLE `module_endpoints` ADD COLUMN `module_feature`  VARCHAR(100) DEFAULT NULL AFTER `module`;

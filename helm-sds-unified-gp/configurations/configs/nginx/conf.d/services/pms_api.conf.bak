@@ -1,4 +1,0 @@
-location /api/pms {
-    include conf.d/support/cors.conf;
-    proxy_pass http://localhost:8012/pms;
-}

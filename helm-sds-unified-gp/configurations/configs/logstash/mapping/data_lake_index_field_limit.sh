@@ -1,1 +1,0 @@
-curl -s -XPUT "http://localhost:9200/data_lake*/_settings"  -H 'Content-Type: application/json' -d '{"index.mapping.total_fields.limit": 1200}'

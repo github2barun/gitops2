@@ -1,1 +1,0 @@
-DROP VIEW IF EXISTS alertapp.reseller_balance;

@@ -1,4 +1,0 @@
-location /api/access {
-    include conf.d/support/cors.conf;
-    proxy_pass http://localhost:8374/access;
-}

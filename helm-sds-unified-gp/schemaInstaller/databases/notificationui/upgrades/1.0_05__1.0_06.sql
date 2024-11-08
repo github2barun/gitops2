@@ -1,1 +1,0 @@
-insert into message_types (`message_type`) values ('WEB');

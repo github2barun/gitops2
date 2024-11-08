@@ -1,4 +1,0 @@
-location /api/scc-payout-engine {
-    include conf.d/support/cors.conf;
-    proxy_pass http://localhost:9698/scc-payout-engine;
-}

@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cm-main
-  namespace: {{ .Release.Namespace }}
-data:
-{{ (.Files.Glob "configs/main/*").AsConfig | indent 2 }}

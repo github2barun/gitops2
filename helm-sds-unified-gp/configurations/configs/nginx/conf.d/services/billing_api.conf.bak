@@ -1,4 +1,0 @@
-location /api/billing {
-    include conf.d/support/cors.conf;
-    proxy_pass http://localhost:8086/billing;
-}

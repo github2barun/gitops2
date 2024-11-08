@@ -1,1 +1,0 @@
-ALTER TABLE `resellertype_policy_map` ADD CONSTRAINT `fk_resellertype_userrole` UNIQUE KEY(`reseller_type`,`user_role`);

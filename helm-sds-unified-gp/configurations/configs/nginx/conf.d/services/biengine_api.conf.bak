@@ -1,5 +1,0 @@
-location /api/bi-engine {
-	include conf.d/support/cors.conf;
-	add_header authorization $authToken;	
-	proxy_pass http://localhost:8917/bi-engine;
-}

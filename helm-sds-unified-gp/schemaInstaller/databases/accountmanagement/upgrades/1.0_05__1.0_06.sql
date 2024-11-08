@@ -1,1 +1,0 @@
-ALTER TABLE deferred_transactions ADD COLUMN system_token varchar(1000) NOT NULL;

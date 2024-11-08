@@ -1,1 +1,0 @@
-INSERT IGNORE INTO product_type (product_type_id, code, description) values (4, 'trackable-non-serialised', 'Type is used for trackable products');

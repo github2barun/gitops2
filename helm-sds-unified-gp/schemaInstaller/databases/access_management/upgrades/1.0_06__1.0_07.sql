@@ -1,1 +1,0 @@
-ALTER TABLE `resellertype_policy_map` ADD COLUMN IF NOT EXISTS `user_role`  VARCHAR(80) DEFAULT NULL AFTER `reseller_type`;

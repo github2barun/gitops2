@@ -1,1 +1,0 @@
-ALTER TABLE batch_pool MODIFY COLUMN `batch_status` varchar(20) NOT NULL COMMENT 'The Batch state machine' CHECK ( batch_status IN ('pending-approval', 'pending', 'processing', 'processed', 'partially-processed', 'cancelled', 'failed', 'rejected', 'validation-failed'));

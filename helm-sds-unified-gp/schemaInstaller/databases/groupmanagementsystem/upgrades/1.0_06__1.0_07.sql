@@ -1,1 +1,0 @@
-ALTER TABLE `group` ADD status_update_date DATETIME NOT NULL;

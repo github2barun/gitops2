@@ -1,1 +1,0 @@
-ALTER TABLE inventory_management_system.serialized_inventory MODIFY COLUMN serial_number varchar (40);
